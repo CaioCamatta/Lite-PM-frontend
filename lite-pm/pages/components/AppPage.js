@@ -47,7 +47,6 @@ class AppPage extends Component {
   addTeamMember() {
     this.toggleAddMemberModal();
     let members = this.state.teamMembers;
-    console.log("HERE");
     members.push(
       <TeamMember
         name={this.state.memberName}
