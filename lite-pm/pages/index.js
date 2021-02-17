@@ -1,8 +1,10 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import { Button } from 'reactstrap';
+import AppPage from './components/AppPage.js'
 
 export default function Home() {
+  return <AppPage></AppPage>
   return (
     <div className={styles.container}>
       <Head>
