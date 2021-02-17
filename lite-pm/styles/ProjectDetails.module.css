@@ -1,0 +1,25 @@
+.h1 {
+  font-size: 19pt;
+}
+
+.date {
+  font-size: 9pt;
+  margin-top: 8pt;
+  opacity: 0.8;
+}
+
+.description {
+    margin-top: 8pt;
+}
+
+.projectLink {
+  float: left;
+  margin-right: 5pt;
+  font-weight: 500;
+  font-size: 13pt; 
+}
+
+.link {
+    float: left;
+    opacity: 0.7;
+}

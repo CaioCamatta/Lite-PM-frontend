@@ -1,0 +1,14 @@
+.h2 {
+    font-size: 19pt;
+    margin-top: 75pt;
+}
+
+.inputs{
+    border: none;
+    border-bottom: 0.1px solid black;
+    width: 300pt;
+}
+
+.add { 
+    border-radius: 100pt;
+}
