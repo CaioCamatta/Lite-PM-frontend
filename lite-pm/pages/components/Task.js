@@ -9,14 +9,13 @@ export default class Task extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: "Create this Timeline wohooooooooooooooo",
-      description:
-        "Awesome Description Pellentesque feugiat facilisis nisi, eget posuere nisl condimentum ut. Vestibulum ut nisl a sapien sagittis tristique et a nibh. Integer blandit ut sem vel varius. Donec vel purus eget turpis pulvinar faucibus sit amet a risus. Ut ornare pharetra cursus. Ut rhoncus mollis mattis. Nam laoreet sollicitudin lacus sed fermentum.",
-      currentState: "test",
+      name: this.props.name,
+      description: this.props.description,
+      currentState: "unclaimed",
       assignee: "test",
-      duration: 3,
+      duration: this.props.duration,
       displayTask: false,
-      durationType: 0
+      durationType: this.props.durationType
     };
   }
 
