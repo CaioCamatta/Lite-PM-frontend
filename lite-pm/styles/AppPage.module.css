@@ -11,4 +11,15 @@
 
 .add { 
     border-radius: 100pt;
+    font-size: 10pt;
+}
+
+.todoHeader {
+    font-size: 15pt;
+    margin-top: 12pt;
+}
+
+.duration {
+    width: 100pt;
+    
 }

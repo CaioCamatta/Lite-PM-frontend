@@ -6,11 +6,16 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
+  ButtonGroup,
 } from "reactstrap";
+
+import styles from "../../styles/AppPage.module.css";
+
 import Navigationbar from "./Navigationbar";
 import ProjectDetails from "./ProjectDetails";
-import styles from "../../styles/AppPage.module.css";
 import TeamMember from "./TeamMember";
+import Task from "./Task";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
@@ -19,11 +24,16 @@ class AppPage extends Component {
     super(props);
     this.state = {
       teamMembers: [],
-      showModal: false,
+      showAddMember: false,
       memberName: "Name",
       memberEmail: "Email",
       memberGit: "Github Link",
       memberPhone: "Phone Number",
+      showAddTask: false,
+      taskName: "Name",
+      taskDescription: "Description",
+      taskDuration: 0,
+      taskDurationType: 0, //0 for hours, 1 for days
     };
     this.addTeamMember = this.addTeamMember.bind(this);
     this.toggleAddMemberModal = this.toggleAddMemberModal.bind(this);
@@ -32,11 +42,12 @@ class AppPage extends Component {
   }
 
   toggleAddMemberModal() {
-    this.setState({ showModal: !this.state.showModal });
+    this.setState({ showAddMember: !this.state.showAddMember });
   }
 
   handleChange(event) {
     const target = event.target;
+    const value = target.type === "number" ? target.number : target.value;
     const name = target.name;
 
     this.setState({
@@ -66,7 +77,10 @@ class AppPage extends Component {
 
   renderCreateMemberModal() {
     return (
-      <Modal isOpen={this.state.showModal} toggle={this.toggleAddMemberModal}>
+      <Modal
+        isOpen={this.state.showAddMember}
+        toggle={this.toggleAddMemberModal}
+      >
         <ModalHeader>Add a Team Member</ModalHeader>
         <ModalBody className="text-center">
           <label>
@@ -112,7 +126,7 @@ class AppPage extends Component {
         <ModalFooter>
           <Button color="secondary" onClick={this.toggleAddMemberModal}>
             cancel
-          </Button>{" "}
+          </Button>
           <Button color="success" onClick={this.addTeamMember}>
             Add Member
           </Button>
@@ -120,6 +134,143 @@ class AppPage extends Component {
       </Modal>
     );
   }
+
+  toggleAddTaskModal = () => {
+    this.setState({ showAddTask: !this.state.showAddTask });
+  };
+
+  renderCreateMemberModal() {
+    return (
+      <Modal
+        isOpen={this.state.showAddMember}
+        toggle={this.toggleAddMemberModal}
+      >
+        <ModalHeader>Add a Team Member</ModalHeader>
+        <ModalBody className="text-center">
+          <label>
+            <input
+              className={styles.inputs}
+              name="memberName"
+              type="text"
+              placeholder="Name"
+              onChange={this.handleChange}
+            />
+          </label>
+          <br />
+          <label>
+            <input
+              className={styles.inputs}
+              name="memberEmail"
+              type="text"
+              placeholder="Email"
+              onChange={this.handleChange}
+            />
+          </label>
+          <br />
+          <label>
+            <input
+              className={styles.inputs}
+              name="memberGit"
+              type="text"
+              placeholder="Github Link"
+              onChange={this.handleChange}
+            />
+          </label>
+          <br />
+          <label>
+            <input
+              className={styles.inputs}
+              name="memberPhone"
+              type="text"
+              placeholder="Phone"
+              onChange={this.handleChange}
+            />
+          </label>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={this.toggleAddMemberModal}>
+            cancel
+          </Button>
+          <Button color="success" onClick={this.addTeamMember}>
+            Add Member
+          </Button>
+        </ModalFooter>
+      </Modal>
+    );
+  }
+
+  setDurationType = (num) => {
+    this.setState({ taskDurationType: num });
+  };
+
+  renderAddTaskModal = () => {
+    return (
+      <Modal isOpen={this.state.showAddTask} toggle={this.toggleAddTaskModal}>
+        <ModalHeader>Add a Task</ModalHeader>
+        <ModalBody className="text-center">
+          <div className='float-left'>
+            <label>
+              <input
+                className={styles.inputs}
+                name="taskName"
+                type="text"
+                placeholder="Name"
+                onChange={this.handleChange}
+              />
+            </label>
+            <br />
+            <label>
+              <input
+                className={styles.inputs}
+                name="taskDescription"
+                type="text"
+                placeholder="Description"
+                onChange={this.handleChange}
+              />
+            </label>
+            <br />
+            <div className="float-left">
+              <label>
+                <input
+                  className={styles.duration}
+                  name="taskDuration"
+                  type="number"
+                  placeholder="0"
+                  onChange={this.handleChange}
+                />
+              </label>
+            </div>
+            <ButtonGroup className="ml-2">
+              <Button
+                color="secondary"
+                onClick={() => this.setDurationType(0)}
+                active={this.state.taskDurationType === 0}
+              >
+                Hours
+              </Button>
+              <Button
+                color="secondary"
+                onClick={() => this.setDurationType(1)}
+                active={this.state.taskDurationType === 1}
+              >
+                Days
+              </Button>
+            </ButtonGroup>
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={this.toggleAddTaskModal}>
+            cancel
+          </Button>
+          <Button color="success" onClick={this.addTask}>
+            Add Task
+          </Button>
+        </ModalFooter>
+      </Modal>
+    );
+  };
+
+  addTask = () => {};
 
   render() {
     return (
@@ -137,10 +288,24 @@ class AppPage extends Component {
             <FontAwesomeIcon icon={faPlus} className="mr-2" />
             Add Member
           </Button>
+          <h2 className={styles.h2}>Tasks and Timeline</h2>
+          <h2 className={styles.todoHeader}>To-do</h2>
+          <div className="d-flex">
+            <Task></Task>
+          </div>
+          <Button
+            color="secondary mt-2"
+            className={styles.add}
+            onClick={this.toggleAddTaskModal}
+          >
+            <FontAwesomeIcon icon={faPlus} className="mr-2" />
+            Add Task
+          </Button>
         </Container>
 
         <div>
           <this.renderCreateMemberModal />
+          <this.renderAddTaskModal />
         </div>
       </div>
     );
