@@ -1,0 +1,22 @@
+.box {
+    border-width: 2px;
+    border-style: solid;
+    border-color: #c0b9b9;
+    border-radius: 15pt;
+    background-color: #ffffff;
+    width: 120pt;
+    float: left;
+    margin-right: 6pt;
+    margin-left: 8pt;
+    height: 28pt;
+    text-align: center;
+  }
+  
+  .contents {
+    font-size: 10pt;
+    font-weight: 300;
+    max-width: 130px;
+    overflow: hidden;
+    white-space: nowrap;
+    color:black;
+  }
