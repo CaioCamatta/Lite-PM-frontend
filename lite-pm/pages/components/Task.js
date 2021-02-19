@@ -35,6 +35,9 @@ export default class Task extends Component {
           <ModalHeader>{this.state.name}</ModalHeader>
           <ModalBody className="text-center">
             {this.state.description}
+            <div className='d-flex'>
+              Duration: {this.state.duration}{this.state.durationType === 0 ? <div className='ml-1'>Hours</div> : <div>Days</div>}
+            </div>
           </ModalBody>
           <ModalFooter>
             <Button color="success" onClick={this.toggleDisplayTask}>

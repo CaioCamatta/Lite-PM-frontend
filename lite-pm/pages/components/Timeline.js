@@ -33,7 +33,7 @@ export default class Timeline extends Component {
 
   handleChange = (event) => {
     const target = event.target;
-    const value = target.type === "number" ? target.number : target.value;
+    const value = target.value
     const name = target.name;
     this.setState({
       [name]: value,
@@ -122,6 +122,7 @@ export default class Timeline extends Component {
   addTask = () => {
     this.toggleAddTaskModal();
     let tempTasks = this.state.tasks;
+    console.log(this.state.taskDuration)
     tempTasks[tempTasks.length - 1] = (
       <Task
         name={this.state.taskName}
