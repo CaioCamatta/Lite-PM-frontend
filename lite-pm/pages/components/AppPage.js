@@ -195,16 +195,6 @@ class AppPage extends Component {
           <h2 className={styles.h2}>Tasks and Timeline</h2>
           <h2 className={styles.todoHeader}>To-do</h2>
           <Timeline timelines={this.state.memberTimelines}></Timeline>
-          
-          
-          <Button
-            color="secondary mt-2"
-            className={styles.add}
-            onClick={this.toggleAddTaskModal}
-          >
-            <FontAwesomeIcon icon={faPlus} className="mr-2" />
-            Add Task
-          </Button>
 
           <ProjectDocuments
             documents={this.state.project.documents}
