@@ -9,12 +9,15 @@ import {
 } from "reactstrap";
 import styles from "../../styles/Timeline.module.css";
 import Task from "./Task";
-import MemberTimline from './MemberTimeline'
+import MemberTimline from "./MemberTimeline";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
-import uuid from 'react-uuid'
+import uuid from "react-uuid";
+
+import axios from "axios";
+const baseUrl = `http://localhost:5000`;
 
 export default class Timeline extends Component {
   //create nice boxes, all must be same size - on click open up display modal for task showing all details
@@ -140,7 +143,7 @@ export default class Timeline extends Component {
         name={this.state.taskName}
         description={this.state.taskDescription}
         duration={this.state.taskDuration}
-        durationType={this.state.taskDurationType}
+        durationType={this.state.taskDurationType} //0 for hours 1 for days
       ></Task>
     );
     tempTasks.push(
@@ -154,6 +157,26 @@ export default class Timeline extends Component {
         Add Task
       </Button>
     );
+
+    //Put the task connection code here!
+    if (this.state.taskDurationType === 0) {
+      this.state.taskDuration = this.state.taskDuration * 3600;
+    } else {
+      this.state.taskDuration = this.state.taskDuration * 86400;
+    }
+    //This creates tasks into the database
+    //const queryString = window.location.search;
+    //const urlParams = new URLSearchParams(queryString)
+    //const projectId = urlParams.get('projectId');
+
+    const projectId = "944f27b6-e6a0-4f2b-af4b-2d3911fc7d76"; //Used for testing need to remove after for production
+    axios.post(`${baseUrl}/api/tasks/create`, {
+      projectId: projectId,
+      title: this.state.taskName,
+      duration: this.state.taskDuration,
+      description: this.state.taskDescription,
+    });
+
     this.setState({
       tasks: tempTasks,
       taskName: "Name",
