@@ -1,7 +1,15 @@
 import { Component } from "react";
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, ButtonGroup } from "reactstrap";
+import {
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  ButtonGroup,
+} from "reactstrap";
 import styles from "../../styles/Timeline.module.css";
 import Task from "./Task";
+import MemberTimline from './MemberTimeline'
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -28,12 +36,13 @@ export default class Timeline extends Component {
           Add Task
         </Button>,
       ],
+      memberTimelines: this.props.timelines,
     };
   }
 
   handleChange = (event) => {
     const target = event.target;
-    const value = target.value
+    const value = target.value;
     const name = target.name;
     this.setState({
       [name]: value,
@@ -122,7 +131,7 @@ export default class Timeline extends Component {
   addTask = () => {
     this.toggleAddTaskModal();
     let tempTasks = this.state.tasks;
-    console.log(this.state.taskDuration)
+    console.log(this.state.taskDuration);
     tempTasks[tempTasks.length - 1] = (
       <Task
         name={this.state.taskName}
@@ -154,6 +163,7 @@ export default class Timeline extends Component {
     return (
       <div>
         <div className={styles.todoContainer}>{this.state.tasks}</div>
+        <div>{this.state.memberTimelines}</div>
         <div>
           <this.renderAddTaskModal />
         </div>

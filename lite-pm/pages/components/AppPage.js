@@ -14,6 +14,7 @@ import Navigationbar from "./Navigationbar";
 import ProjectDetails from "./ProjectDetails";
 import TeamMember from "./TeamMember";
 import Timeline from "./Timeline";
+import MemberTimeline from './MemberTimeline'
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -23,6 +24,7 @@ class AppPage extends Component {
     super(props);
     this.state = {
       teamMembers: [],
+      memberTimelines: [],
       showAddMember: false,
       memberName: "Name",
       memberEmail: "Email",
@@ -60,7 +62,16 @@ class AppPage extends Component {
         phone={this.state.memberPhone}
       ></TeamMember>
     );
+    
+    let timelines = this.state.memberTimelines
+    timelines.push(
+      <MemberTimeline
+        name={this.state.memberName}
+      ></MemberTimeline>
+    );
+
     this.setState({
+      memberTimelines: timelines,
       teamMembers: members,
       memberName: "Name",
       memberEmail: "Email",
@@ -147,7 +158,7 @@ class AppPage extends Component {
           </Button>
           <h2 className={styles.h2}>Tasks and Timeline</h2>
           <h2 className={styles.todoHeader}>To-do</h2>
-          <Timeline></Timeline>
+          <Timeline timelines={this.state.memberTimelines}></Timeline>
           
         </Container>
 
