@@ -15,6 +15,7 @@ import Navigationbar from "./Navigationbar";
 import ProjectDetails from "./ProjectDetails";
 import TeamMember from "./TeamMember";
 import Task from "./Task";
+import ProjectDocuments from "./ProjectDocuments";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -24,6 +25,12 @@ class AppPage extends Component {
     super(props);
     this.state = {
       teamMembers: [],
+      project: {
+        documents: [
+          { name: "Planning", url: "https://www.google.com/9smc7h2" },
+          { name: "Design", url: "https://www.google.com/8sn3da1" },
+        ],
+      },
       showAddMember: false,
       memberName: "Name",
       memberEmail: "Email",
@@ -301,6 +308,11 @@ class AppPage extends Component {
             <FontAwesomeIcon icon={faPlus} className="mr-2" />
             Add Task
           </Button>
+
+          <ProjectDocuments
+            documents={this.state.project.documents}
+            className="mt-5"
+          />
         </Container>
 
         <div>
