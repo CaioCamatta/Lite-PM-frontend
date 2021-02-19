@@ -14,6 +14,8 @@ import MemberTimline from './MemberTimeline'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
+import uuid from 'react-uuid'
+
 export default class Timeline extends Component {
   //create nice boxes, all must be same size - on click open up display modal for task showing all details
   //figure out how to have them nicely space in container
@@ -28,6 +30,7 @@ export default class Timeline extends Component {
       taskDurationType: 0, //0 for hours, 1 for days
       tasks: [
         <Button
+          key={uuid()}
           color="secondary"
           className={styles.addTask}
           onClick={this.toggleAddTaskModal}
@@ -131,9 +134,9 @@ export default class Timeline extends Component {
   addTask = () => {
     this.toggleAddTaskModal();
     let tempTasks = this.state.tasks;
-    console.log(this.state.taskDuration);
     tempTasks[tempTasks.length - 1] = (
       <Task
+        key={uuid()}
         name={this.state.taskName}
         description={this.state.taskDescription}
         duration={this.state.taskDuration}
@@ -142,6 +145,7 @@ export default class Timeline extends Component {
     );
     tempTasks.push(
       <Button
+        key={uuid()}
         color="secondary"
         className={styles.addTask}
         onClick={this.toggleAddTaskModal}

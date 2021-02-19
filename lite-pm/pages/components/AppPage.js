@@ -15,13 +15,13 @@ import ProjectDetails from "./ProjectDetails";
 import TeamMember from "./TeamMember";
 import Timeline from "./Timeline";
 import MemberTimeline from './MemberTimeline'
-import Task from "./Task";
 import ProjectDocuments from "./ProjectDocuments";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 import axios from "axios";
+import uuid from 'react-uuid'
 
 const baseUrl = `http://localhost:5000`;
 
@@ -73,6 +73,7 @@ class AppPage extends Component {
     let members = this.state.teamMembers;
     members.push(
       <TeamMember
+        key={uuid()}
         name={this.state.memberName}
         email={this.state.memberEmail}
         git={this.state.memberGit}
@@ -83,6 +84,7 @@ class AppPage extends Component {
     let timelines = this.state.memberTimelines
     timelines.push(
       <MemberTimeline
+        key={uuid()}
         name={this.state.memberName}
       ></MemberTimeline>
     );
