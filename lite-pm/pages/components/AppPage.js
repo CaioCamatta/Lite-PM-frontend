@@ -6,7 +6,6 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  ButtonGroup,
 } from "reactstrap";
 
 import styles from "../../styles/AppPage.module.css";
@@ -14,13 +13,15 @@ import styles from "../../styles/AppPage.module.css";
 import Navigationbar from "./Navigationbar";
 import ProjectDetails from "./ProjectDetails";
 import TeamMember from "./TeamMember";
-import Task from "./Task";
+import Timeline from "./Timeline";
+import MemberTimeline from './MemberTimeline'
 import ProjectDocuments from "./ProjectDocuments";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 import axios from "axios";
+import uuid from 'react-uuid'
 
 const baseUrl = `http://localhost:5000`;
 
@@ -29,6 +30,7 @@ class AppPage extends Component {
     super(props);
     this.state = {
       teamMembers: [],
+      memberTimelines: [],
       project: {
         projectId: "944f27b6-e6a0-4f2b-af4b-2d3911fc7d76",
         documents: [
@@ -45,11 +47,7 @@ class AppPage extends Component {
       memberEmail: "Email",
       memberGit: "Github Link",
       memberPhone: "Phone Number",
-      showAddTask: false,
-      taskName: "Name",
-      taskDescription: "Description",
-      taskDuration: 0,
-      taskDurationType: 0, //0 for hours, 1 for days
+      
     };
     this.addTeamMember = this.addTeamMember.bind(this);
     this.toggleAddMemberModal = this.toggleAddMemberModal.bind(this);
@@ -63,11 +61,10 @@ class AppPage extends Component {
 
   handleChange(event) {
     const target = event.target;
-    const value = target.type === "number" ? target.number : target.value;
+    const value = target.value;
     const name = target.name;
-
     this.setState({
-      [name]: target.value,
+      [name]: value,
     });
   }
 
@@ -76,11 +73,20 @@ class AppPage extends Component {
     let members = this.state.teamMembers;
     members.push(
       <TeamMember
+        key={uuid()}
         name={this.state.memberName}
         email={this.state.memberEmail}
         git={this.state.memberGit}
         phone={this.state.memberPhone}
       ></TeamMember>
+    );
+    
+    let timelines = this.state.memberTimelines
+    timelines.push(
+      <MemberTimeline
+        key={uuid()}
+        name={this.state.memberName}
+      ></MemberTimeline>
     );
 
     //This creates members into the database
@@ -98,6 +104,7 @@ class AppPage extends Component {
     });
 
     this.setState({
+      memberTimelines: timelines,
       teamMembers: members,
       memberName: "Name",
       memberEmail: "Email",
@@ -166,143 +173,6 @@ class AppPage extends Component {
     );
   }
 
-  toggleAddTaskModal = () => {
-    this.setState({ showAddTask: !this.state.showAddTask });
-  };
-
-  renderCreateMemberModal() {
-    return (
-      <Modal
-        isOpen={this.state.showAddMember}
-        toggle={this.toggleAddMemberModal}
-      >
-        <ModalHeader>Add a Team Member</ModalHeader>
-        <ModalBody className="text-center">
-          <label>
-            <input
-              className={styles.inputs}
-              name="memberName"
-              type="text"
-              placeholder="Name"
-              onChange={this.handleChange}
-            />
-          </label>
-          <br />
-          <label>
-            <input
-              className={styles.inputs}
-              name="memberEmail"
-              type="text"
-              placeholder="Email"
-              onChange={this.handleChange}
-            />
-          </label>
-          <br />
-          <label>
-            <input
-              className={styles.inputs}
-              name="memberGit"
-              type="text"
-              placeholder="Github Link"
-              onChange={this.handleChange}
-            />
-          </label>
-          <br />
-          <label>
-            <input
-              className={styles.inputs}
-              name="memberPhone"
-              type="text"
-              placeholder="Phone"
-              onChange={this.handleChange}
-            />
-          </label>
-        </ModalBody>
-        <ModalFooter>
-          <Button color="secondary" onClick={this.toggleAddMemberModal}>
-            cancel
-          </Button>
-          <Button color="success" onClick={this.addTeamMember}>
-            Add Member
-          </Button>
-        </ModalFooter>
-      </Modal>
-    );
-  }
-
-  setDurationType = (num) => {
-    this.setState({ taskDurationType: num });
-  };
-
-  renderAddTaskModal = () => {
-    return (
-      <Modal isOpen={this.state.showAddTask} toggle={this.toggleAddTaskModal}>
-        <ModalHeader>Add a Task</ModalHeader>
-        <ModalBody className="text-center">
-          <div className="float-left">
-            <label>
-              <input
-                className={styles.inputs}
-                name="taskName"
-                type="text"
-                placeholder="Name"
-                onChange={this.handleChange}
-              />
-            </label>
-            <br />
-            <label>
-              <input
-                className={styles.inputs}
-                name="taskDescription"
-                type="text"
-                placeholder="Description"
-                onChange={this.handleChange}
-              />
-            </label>
-            <br />
-            <div className="float-left">
-              <label>
-                <input
-                  className={styles.duration}
-                  name="taskDuration"
-                  type="number"
-                  placeholder="0"
-                  onChange={this.handleChange}
-                />
-              </label>
-            </div>
-            <ButtonGroup className="ml-2">
-              <Button
-                color="secondary"
-                onClick={() => this.setDurationType(0)}
-                active={this.state.taskDurationType === 0}
-              >
-                Hours
-              </Button>
-              <Button
-                color="secondary"
-                onClick={() => this.setDurationType(1)}
-                active={this.state.taskDurationType === 1}
-              >
-                Days
-              </Button>
-            </ButtonGroup>
-          </div>
-        </ModalBody>
-        <ModalFooter>
-          <Button color="secondary" onClick={this.toggleAddTaskModal}>
-            cancel
-          </Button>
-          <Button color="success" onClick={this.addTask}>
-            Add Task
-          </Button>
-        </ModalFooter>
-      </Modal>
-    );
-  };
-
-  addTask = () => {};
-
   render() {
     const commonProps = {
       apiBaseUrl: baseUrl,
@@ -326,17 +196,7 @@ class AppPage extends Component {
           </Button>
           <h2 className={styles.h2}>Tasks and Timeline</h2>
           <h2 className={styles.todoHeader}>To-do</h2>
-          <div className="d-flex">
-            <Task></Task>
-          </div>
-          <Button
-            color="secondary mt-2"
-            className={styles.add}
-            onClick={this.toggleAddTaskModal}
-          >
-            <FontAwesomeIcon icon={faPlus} className="mr-2" />
-            Add Task
-          </Button>
+          <Timeline timelines={this.state.memberTimelines}></Timeline>
 
           <ProjectDocuments
             documents={this.state.project.documents}
@@ -347,7 +207,6 @@ class AppPage extends Component {
 
         <div>
           <this.renderCreateMemberModal />
-          <this.renderAddTaskModal />
         </div>
       </div>
     );
