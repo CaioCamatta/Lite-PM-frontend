@@ -20,6 +20,10 @@ import ProjectDocuments from "./ProjectDocuments";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
+import axios from 'axios';
+
+const baseUrl = `http://localhost:5000`;
+
 class AppPage extends Component {
   constructor(props) {
     super(props);
@@ -73,6 +77,16 @@ class AppPage extends Component {
         phone={this.state.memberPhone}
       ></TeamMember>
     );
+
+    //This creates members into the database 
+    //const queryString = window.location.search;
+    //const urlParams = new URLSearchParams(queryString)
+    //const projectId = urlParams.get('projectId');
+    
+    //Used for testing need to remove after for production
+    const projectId = "944f27b6-e6a0-4f2b-af4b-2d3911fc7d76";
+    axios.post(`${baseUrl}/api/members/create`,{projectId: projectId, name: this.state.memberName, email: this.state.memberEmail, github: this.state.memberGit, phone: this.state.memberPhone});
+
     this.setState({
       teamMembers: members,
       memberName: "Name",
