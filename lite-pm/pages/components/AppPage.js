@@ -20,7 +20,7 @@ import ProjectDocuments from "./ProjectDocuments";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
-import axios from 'axios';
+import axios from "axios";
 
 const baseUrl = `http://localhost:5000`;
 
@@ -30,9 +30,14 @@ class AppPage extends Component {
     this.state = {
       teamMembers: [],
       project: {
+        projectId: "944f27b6-e6a0-4f2b-af4b-2d3911fc7d76",
         documents: [
-          { name: "Planning", url: "https://www.google.com/9smc7h2" },
-          { name: "Design", url: "https://www.google.com/8sn3da1" },
+          {
+            title: "Planning",
+            url: "https://www.google.com/9smc7h2",
+            documentId: "bdfe8bfe-ce0b-4bcf-aa4f-a6b31c1b42cc",
+          },
+          { title: "Design", url: "https://www.google.com/8sn3da1" },
         ],
       },
       showAddMember: false,
@@ -78,14 +83,19 @@ class AppPage extends Component {
       ></TeamMember>
     );
 
-    //This creates members into the database 
+    //This creates members into the database
     //const queryString = window.location.search;
     //const urlParams = new URLSearchParams(queryString)
     //const projectId = urlParams.get('projectId');
-    
     //Used for testing need to remove after for production
     const projectId = "944f27b6-e6a0-4f2b-af4b-2d3911fc7d76";
-    axios.post(`${baseUrl}/api/members/create`,{projectId: projectId, name: this.state.memberName, email: this.state.memberEmail, github: this.state.memberGit, phone: this.state.memberPhone});
+    axios.post(`${baseUrl}/api/members/create`, {
+      projectId: projectId,
+      name: this.state.memberName,
+      email: this.state.memberEmail,
+      github: this.state.memberGit,
+      phone: this.state.memberPhone,
+    });
 
     this.setState({
       teamMembers: members,
@@ -229,7 +239,7 @@ class AppPage extends Component {
       <Modal isOpen={this.state.showAddTask} toggle={this.toggleAddTaskModal}>
         <ModalHeader>Add a Task</ModalHeader>
         <ModalBody className="text-center">
-          <div className='float-left'>
+          <div className="float-left">
             <label>
               <input
                 className={styles.inputs}
@@ -294,10 +304,15 @@ class AppPage extends Component {
   addTask = () => {};
 
   render() {
+    const commonProps = {
+      apiBaseUrl: baseUrl,
+      projectId: this.state?.project?.projectId,
+    };
+
     return (
       <div>
         <Navigationbar></Navigationbar>
-        <Container className="mt-5">
+        <Container className="mt-5 mb-5">
           <ProjectDetails></ProjectDetails>
           <h2 className={styles.h2}>The Team</h2>
           <div className="d-flex">{this.state.teamMembers}</div>
@@ -326,6 +341,7 @@ class AppPage extends Component {
           <ProjectDocuments
             documents={this.state.project.documents}
             className="mt-5"
+            {...commonProps}
           />
         </Container>
 
