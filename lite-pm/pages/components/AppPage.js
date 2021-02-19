@@ -18,6 +18,7 @@ import Task from "./Task";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 class AppPage extends Component {
   constructor(props) {
@@ -35,6 +36,12 @@ class AppPage extends Component {
       taskDuration: 0,
       taskDurationType: 0, //0 for hours, 1 for days
     };
+    this.state.project = {
+      projectName : 'Project Name',
+      projectDescription: "Testing Description",
+      projectDuration: "Timeline",
+      projectLink: "lite-pm.com/project/exampleId",
+    }
     this.addTeamMember = this.addTeamMember.bind(this);
     this.toggleAddMemberModal = this.toggleAddMemberModal.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -309,6 +316,9 @@ class AppPage extends Component {
         </div>
       </div>
     );
+  }
+  getProjectDetails(){
+    return axios.get(`${baseUrl}/api/project/${this.projectId}`)
   }
 }
 
