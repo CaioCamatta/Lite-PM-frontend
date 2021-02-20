@@ -33,7 +33,9 @@ export default function Home() {
                 Gantt chart, manage team members, and easily create and share
                 Google Docs with your team. All in a <b>single page</b>!
               </p>
-              <Button size="lg" color="secondary mb-4">Start Project</Button>
+              <Button size="lg" color="secondary mb-4">
+                Start Project
+              </Button>
             </Col>
             <Col
               sm={{ size: 4, offset: 0 }}
