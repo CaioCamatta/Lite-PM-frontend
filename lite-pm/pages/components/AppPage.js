@@ -8,7 +8,9 @@ import {
   ModalFooter,
   ButtonGroup,
 } from "reactstrap";
-
+{
+}
+const baseUrl = "http://localhost:5000";
 import styles from "../../styles/AppPage.module.css";
 
 import Navigationbar from "./Navigationbar";
@@ -35,13 +37,15 @@ class AppPage extends Component {
       taskDescription: "Description",
       taskDuration: 0,
       taskDurationType: 0, //0 for hours, 1 for days
-    };
-    this.state.project = {
-      projectName : 'Project Name',
+      projectName: "Project Name",
       projectDescription: "Testing Description",
       projectDuration: "Timeline",
       projectLink: "lite-pm.com/project/exampleId",
-    }
+      projectId: "",
+    };
+    
+      
+    
     this.addTeamMember = this.addTeamMember.bind(this);
     this.toggleAddMemberModal = this.toggleAddMemberModal.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -215,7 +219,7 @@ class AppPage extends Component {
       <Modal isOpen={this.state.showAddTask} toggle={this.toggleAddTaskModal}>
         <ModalHeader>Add a Task</ModalHeader>
         <ModalBody className="text-center">
-          <div className='float-left'>
+          <div className="float-left">
             <label>
               <input
                 className={styles.inputs}
@@ -317,9 +321,39 @@ class AppPage extends Component {
       </div>
     );
   }
-  getProjectDetails(){
-    return axios.get(`${baseUrl}/api/project/${this.projectId}`)
+  componentDidMount(){
+    let project = window.location.href.toString();
+    let testcase = project.split("/projects/")
+    console.log(testcase[1]);
+    this.setState({
+      projectId: testcase[1]
+    },()=>{ 
+      console.log(this.state.projectId);
+      this.getProjectDetails(); 
+    });
   }
+  getProjectDetails = () => {
+    return axios.get(`${baseUrl}/api/project/get/${this.state.projectId}`, {}).then(
+      (res) => {
+        this.setState({
+          projectName: res.data.projectName,
+          projectDescription: res.data.Description,
+          projectDuration: res.data.Duration,
+          projectLink: `lite-pm.com/project/${res.data.projectId}`,
+        },() => {
+          <ProjectDetails
+            projname={this.state.projectName}
+            description={this.state.projectDescription}
+            duration={this.state.projectDuration}
+            projectLink={this.state.projectLink}
+          ></ProjectDetails>;
+        });
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  };
 }
 
 export default AppPage;

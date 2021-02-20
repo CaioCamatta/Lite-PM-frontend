@@ -2,22 +2,27 @@ import { Component } from "react";
 import styles from "../../styles/ProjectDetails.module.css";
 
 export default class ProjectDetails extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      projectName: this.props.projname,
+      projectDescription: this.props.description,
+      projectDuration : this.props.duration,
+      projectLink : `lite-pm.com/project/${this.props.projectLink}`
+    };
+  }
   render() {
     return (
       <div>
-        <h1 className={styles.h1}>Project Name</h1>
-        <div className={styles.date}>Feb 16, 2021 to Feb 20, 2021</div>
+        <h1 className={styles.h1}>{this.state.projectName}</h1>
+        <div className={styles.date}>{this.state.projectDuration}</div>
         <div className={styles.description}>
-          Awesome Description Pellentesque feugiat facilisis nisi, eget posuere
-          nisl condimentum ut. Vestibulum ut nisl a sapien sagittis tristique et
-          a nibh. Integer blandit ut sem vel varius. Donec vel purus eget turpis
-          pulvinar faucibus sit amet a risus. Ut ornare pharetra cursus. Ut
-          rhoncus mollis mattis. Nam laoreet sollicitudin lacus sed fermentum.
+          {this.state.projectDescription}
         </div>
         <div className="mt-2">
           <div className={styles.projectLink}>Project Link:</div>
           <div className={styles.link}>
-            https://lite-pm.vercel.app/yourUniqueId
+            {this.state.projectLink}
           </div>
         </div>
       </div>
