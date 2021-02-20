@@ -1,0 +1,23 @@
+.timeline{
+    border-radius: 30pt;
+    border-width: 2pt;
+    border-color: grey;
+    background-color: white;
+    border-style: solid;
+    width: 100%;
+    
+    margin-left: 3pt;
+}
+
+.timelineContainer {
+    height: 28pt;
+    display: flex;
+    width: 100%;
+    margin-bottom: 8pt;
+}
+
+.name {
+    font-size: 17pt;
+    max-width: 90pt;
+    min-width: 90pt;
+}
