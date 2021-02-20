@@ -19,7 +19,6 @@ import ProjectDocuments from "./ProjectDocuments";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-
 import axios from "axios";
 import uuid from "react-uuid";
 
@@ -32,15 +31,10 @@ class AppPage extends Component {
       teamMembers: [],
       memberTimelines: [],
       project: {
-        projectId: "944f27b6-e6a0-4f2b-af4b-2d3911fc7d76",
-        documents: [
-          {
-            title: "Planning",
-            url: "https://www.google.com/9smc7h2",
-            documentId: "bdfe8bfe-ce0b-4bcf-aa4f-a6b31c1b42cc",
-          },
-          { title: "Design", url: "https://www.google.com/8sn3da1" },
-        ],
+        projectName: "Loading",
+        Description: "Loading Description",
+        Duration: "Loading Duration",
+        projectId: "Loading",
       },
       showAddMember: false,
       memberName: "Name",
@@ -48,6 +42,7 @@ class AppPage extends Component {
       memberGit: "Github Link",
       memberPhone: "Phone Number",
     };
+
     this.addTeamMember = this.addTeamMember.bind(this);
     this.toggleAddMemberModal = this.toggleAddMemberModal.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -93,7 +88,7 @@ class AppPage extends Component {
     //const urlParams = new URLSearchParams(queryString)
     //const projectId = urlParams.get('projectId');
     //Used for testing need to remove after for production
-    const projectId = "944f27b6-e6a0-4f2b-af4b-2d3911fc7d76";
+    const projectId = this.state.project.projectId;
     axios.post(`${baseUrl}/api/members/create`, {
       projectId: projectId,
       name: this.state.memberName,
@@ -177,12 +172,16 @@ class AppPage extends Component {
       apiBaseUrl: baseUrl,
       projectId: this.state?.project?.projectId,
     };
-
     return (
       <Layout>
         <div>
           <Container className="mt-5 mb-5">
-            <ProjectDetails></ProjectDetails>
+            <ProjectDetails
+              projname={this.state.project.projectName}
+              description={this.state.project.Description}
+              duration={this.state.project.Duration}
+              projectLink={this.state.project.projectId}
+            />
             <h2 className={styles.h2}>The Team</h2>
             <div className="d-flex">{this.state.teamMembers}</div>
             <Button
@@ -211,6 +210,37 @@ class AppPage extends Component {
       </Layout>
     );
   }
+  componentDidMount() {
+    let project = window.location.href.toString();
+    let testcase = project.split("/projects/");
+    this.setState(
+      {
+        projectId: testcase[1],
+      },
+      () => {
+        this.getProjectDetails();
+      }
+    );
+  }
+  getProjectDetails = () => {
+    return axios
+      .get(`${baseUrl}/api/project/get/${this.state.projectId}`, {})
+      .then(
+        (res) => {
+          this.setState(
+            {
+              project: res.data,
+            },
+            () => {
+              console.log(this.state.project.Member);
+            }
+          );
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+  };
 }
 
 export default AppPage;
