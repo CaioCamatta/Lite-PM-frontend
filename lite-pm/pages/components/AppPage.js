@@ -23,6 +23,8 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import uuid from 'react-uuid'
 
+import ReactDom from 'react-dom'
+
 const baseUrl = `http://localhost:5000`;
 
 class AppPage extends Component {
@@ -48,11 +50,14 @@ class AppPage extends Component {
       memberGit: "Github Link",
       memberPhone: "Phone Number",
       
+      references: [],
     };
     this.addTeamMember = this.addTeamMember.bind(this);
     this.toggleAddMemberModal = this.toggleAddMemberModal.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.renderCreateMemberModal = this.renderCreateMemberModal.bind(this);
+
+    this.textInput = React.createRef()
   }
 
   toggleAddMemberModal() {
@@ -82,10 +87,18 @@ class AppPage extends Component {
     );
     
     let timelines = this.state.memberTimelines
+
+    let temp = React.createRef()
+    let tempRefs = this.state.references
+    tempRefs.push(temp)
+    this.setState({references: tempRefs})
+    console.log(this.state.references)
+
     timelines.push(
       <MemberTimeline
         key={uuid()}
         name={this.state.memberName}
+        reference={temp}
       ></MemberTimeline>
     );
 
@@ -173,6 +186,17 @@ class AppPage extends Component {
     );
   }
 
+  handleStop = (event, draggableData) => {
+    let length = this.state.references.length
+    for(let i = 0; i < length; i++){
+      console.log(this.state.references[i].current.getBoundingClientRect())
+    }
+    
+    console.log(draggableData)
+    
+    
+  };
+
   render() {
     const commonProps = {
       apiBaseUrl: baseUrl,
@@ -196,7 +220,7 @@ class AppPage extends Component {
           </Button>
           <h2 className={styles.h2}>Tasks and Timeline</h2>
           <h2 className={styles.todoHeader}>To-do</h2>
-          <Timeline timelines={this.state.memberTimelines}></Timeline>
+          <Timeline timelines={this.state.memberTimelines} handleStop = {this.handleStop}></Timeline>
 
           <ProjectDocuments
             documents={this.state.project.documents}

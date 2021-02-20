@@ -9,12 +9,12 @@ import {
 } from "reactstrap";
 import styles from "../../styles/Timeline.module.css";
 import Task from "./Task";
-import MemberTimline from './MemberTimeline'
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
-import uuid from 'react-uuid'
+import uuid from "react-uuid";
+
 
 export default class Timeline extends Component {
   //create nice boxes, all must be same size - on click open up display modal for task showing all details
@@ -131,16 +131,20 @@ export default class Timeline extends Component {
     );
   };
 
+  
+
   addTask = () => {
     this.toggleAddTaskModal();
     let tempTasks = this.state.tasks;
     tempTasks[tempTasks.length - 1] = (
       <Task
+        handleStop={this.props.handleStop}
         key={uuid()}
         name={this.state.taskName}
         description={this.state.taskDescription}
         duration={this.state.taskDuration}
         durationType={this.state.taskDurationType}
+        reference = {this.props.reference}
       ></Task>
     );
     tempTasks.push(

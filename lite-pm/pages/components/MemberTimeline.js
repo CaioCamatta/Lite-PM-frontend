@@ -6,19 +6,19 @@ export default class MemberTimeline extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: this.props.name
+      name: this.props.name,
     };
   }
-
-  
 
   render() {
     return (
       <div className={styles.timelineContainer}>
-          <div className={styles.name}>{this.state.name}</div>
-          <div className={styles.timeline}></div>
+        <div className={styles.name}>{this.state.name}</div>
+        <div
+          className={styles.timeline}
+          ref={this.props.reference}
+        ></div>
       </div>
-
     );
   }
 }
