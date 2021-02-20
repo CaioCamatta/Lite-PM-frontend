@@ -7,8 +7,7 @@ import {
   ModalBody,
   ModalFooter,
 } from "reactstrap";
-{
-}
+
 const baseUrl = "http://localhost:5000";
 import styles from "../../styles/AppPage.module.css";
 
