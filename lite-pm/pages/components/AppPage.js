@@ -14,16 +14,16 @@ import Navigationbar from "./Navigationbar";
 import ProjectDetails from "./ProjectDetails";
 import TeamMember from "./TeamMember";
 import Timeline from "./Timeline";
-import MemberTimeline from './MemberTimeline'
+import MemberTimeline from "./MemberTimeline";
 import ProjectDocuments from "./ProjectDocuments";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 import axios from "axios";
-import uuid from 'react-uuid'
+import uuid from "react-uuid";
 
-import ReactDom from 'react-dom'
+import ReactDom from "react-dom";
 
 const baseUrl = `http://localhost:5000`;
 
@@ -35,6 +35,26 @@ class AppPage extends Component {
       memberTimelines: [],
       project: {
         projectId: "944f27b6-e6a0-4f2b-af4b-2d3911fc7d76",
+        tasks: [
+          {
+            title: "my task",
+            taskId: "si3jddj",
+            status: "inprogress",
+            duration: 3600,
+            startDate: 1613855667,
+            description: "my description",
+            assignee: "gandalf",
+          },
+          {
+            title: "task 2",
+            taskId: "ifn38dn",
+            status: "inprogress",
+            duration: 7200,
+            startDate: 1613865667,
+            description: "description 2",
+            assignee: "gandalf",
+          },
+        ],
         documents: [
           {
             title: "Planning",
@@ -49,7 +69,7 @@ class AppPage extends Component {
       memberEmail: "Email",
       memberGit: "Github Link",
       memberPhone: "Phone Number",
-      
+
       references: [],
     };
     this.addTeamMember = this.addTeamMember.bind(this);
@@ -57,7 +77,7 @@ class AppPage extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.renderCreateMemberModal = this.renderCreateMemberModal.bind(this);
 
-    this.textInput = React.createRef()
+    this.textInput = React.createRef();
   }
 
   toggleAddMemberModal() {
@@ -85,20 +105,21 @@ class AppPage extends Component {
         phone={this.state.memberPhone}
       ></TeamMember>
     );
-    
-    let timelines = this.state.memberTimelines
 
-    let temp = React.createRef()
-    let tempRefs = this.state.references
-    tempRefs.push(temp)
-    this.setState({references: tempRefs})
-    console.log(this.state.references)
+    let timelines = this.state.memberTimelines;
+
+    let temp = React.createRef();
+    let tempRefs = this.state.references;
+    tempRefs.push(temp);
+    this.setState({ references: tempRefs });
+    console.log(this.state.references);
 
     timelines.push(
       <MemberTimeline
         key={uuid()}
         name={this.state.memberName}
         reference={temp}
+        tasks={this.state.project.tasks}
       ></MemberTimeline>
     );
 
@@ -187,14 +208,12 @@ class AppPage extends Component {
   }
 
   handleStop = (event, draggableData) => {
-    let length = this.state.references.length
-    for(let i = 0; i < length; i++){
-      console.log(this.state.references[i].current.getBoundingClientRect())
+    let length = this.state.references.length;
+    for (let i = 0; i < length; i++) {
+      console.log(this.state.references[i].current.getBoundingClientRect());
     }
-    
-    console.log(draggableData)
-    
-    
+
+    console.log(draggableData);
   };
 
   render() {
@@ -220,7 +239,10 @@ class AppPage extends Component {
           </Button>
           <h2 className={styles.h2}>Tasks and Timeline</h2>
           <h2 className={styles.todoHeader}>To-do</h2>
-          <Timeline timelines={this.state.memberTimelines} handleStop = {this.handleStop}></Timeline>
+          <Timeline
+            timelines={this.state.memberTimelines}
+            handleStop={this.handleStop}
+          ></Timeline>
 
           <ProjectDocuments
             documents={this.state.project.documents}

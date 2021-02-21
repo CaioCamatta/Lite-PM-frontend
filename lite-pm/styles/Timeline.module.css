@@ -37,3 +37,7 @@
     flex-wrap: wrap;
     margin-bottom: 10pt;
 }
+
+.timeTicks{
+    padding-left: 128px;
+}

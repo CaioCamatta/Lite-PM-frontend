@@ -4,7 +4,6 @@ import styles from "../../styles/Task.module.css";
 
 import Draggable from "react-draggable";
 
-
 export default class Task extends Component {
   //create nice boxes, all must be same size - on click open up display modal for task showing all details
   //figure out how to have them nicely space in container
@@ -26,13 +25,21 @@ export default class Task extends Component {
     this.setState({ displayTask: !this.state.displayTask });
   };
 
-  
-
   render() {
     return (
-      <Draggable defaultPosition={{x: 0, y: 0}} onStop={this.props.handleStop}>
-        <div>
-          <Button className={styles.box} onClick={this.toggleDisplayTask} disabled={true}>
+      <Draggable
+        defaultPosition={{ x: 0, y: 0 }}
+        onStop={this.props.handleStop}
+      >
+        <div
+          className={this.props.className}
+          style={{ left: this.props.left }}
+        >
+          <Button
+            className={styles.box}
+            onClick={this.toggleDisplayTask}
+            disabled={true}
+          >
             <div className={styles.contents}>{this.state.name}</div>
           </Button>
           <Modal
