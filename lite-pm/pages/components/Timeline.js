@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import {
   Button,
   Modal,
@@ -8,13 +8,12 @@ import {
   ButtonGroup,
 } from "reactstrap";
 import styles from "../../styles/Timeline.module.css";
+import MemberTimeline from "./MemberTimeline";
 import Task from "./Task";
-import MemberTimline from './MemberTimeline'
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-
-import uuid from 'react-uuid'
+import uuid from "react-uuid";
 
 export default class Timeline extends Component {
   //create nice boxes, all must be same size - on click open up display modal for task showing all details
@@ -23,153 +22,73 @@ export default class Timeline extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showAddTask: false,
-      taskName: "Name",
-      taskDescription: "Description",
-      taskDuration: 0,
-      taskDurationType: 0, //0 for hours, 1 for days
-      tasks: [
-        <Button
-          key={uuid()}
-          color="secondary"
-          className={styles.addTask}
-          onClick={this.toggleAddTaskModal}
-        >
-          <FontAwesomeIcon icon={faPlus} className="mr-2" />
-          Add Task
-        </Button>,
-      ],
       memberTimelines: this.props.timelines,
     };
   }
 
-  handleChange = (event) => {
-    const target = event.target;
-    const value = target.value;
-    const name = target.name;
-    this.setState({
-      [name]: value,
-    });
-  };
-
-  toggleAddTaskModal = () => {
-    this.setState({ showAddTask: !this.state.showAddTask });
-  };
-
-  setDurationType = (num) => {
-    this.setState({ taskDurationType: num });
-  };
-
-  renderAddTaskModal = () => {
-    return (
-      <Modal isOpen={this.state.showAddTask} toggle={this.toggleAddTaskModal}>
-        <ModalHeader>Add a Task</ModalHeader>
-        <ModalBody className="text-center">
-          <div className="float-left">
-            <label>
-              <div className="float-left">Title*</div>
-              <input
-                className={styles.taskInput}
-                name="taskName"
-                type="text"
-                placeholder="Title"
-                onChange={this.handleChange}
-              />
-            </label>
-            <br />
-            <label>
-              <div className="float-left">Description</div>
-              <input
-                className={styles.taskInput}
-                name="taskDescription"
-                type="text"
-                placeholder="Description"
-                onChange={this.handleChange}
-              />
-            </label>
-            <br />
-
-            <div className="float-left">
-              <div className={styles.durationText}>Duration*</div>
-              <label>
-                <input
-                  className={styles.duration}
-                  name="taskDuration"
-                  type="number"
-                  placeholder="0"
-                  onChange={this.handleChange}
-                />
-              </label>
-              <ButtonGroup className="ml-3">
-                <Button
-                  color="secondary"
-                  onClick={() => this.setDurationType(0)}
-                  active={this.state.taskDurationType === 0}
-                >
-                  Hours
-                </Button>
-                <Button
-                  color="secondary"
-                  onClick={() => this.setDurationType(1)}
-                  active={this.state.taskDurationType === 1}
-                >
-                  Days
-                </Button>
-              </ButtonGroup>
-            </div>
-          </div>
-        </ModalBody>
-        <ModalFooter>
-          <Button color="secondary" onClick={this.toggleAddTaskModal}>
-            cancel
-          </Button>
-          <Button color="success" onClick={this.addTask}>
-            Add Task
-          </Button>
-        </ModalFooter>
-      </Modal>
-    );
-  };
-
-  addTask = () => {
-    this.toggleAddTaskModal();
-    let tempTasks = this.state.tasks;
-    tempTasks[tempTasks.length - 1] = (
-      <Task
-        key={uuid()}
-        name={this.state.taskName}
-        description={this.state.taskDescription}
-        duration={this.state.taskDuration}
-        durationType={this.state.taskDurationType}
-      ></Task>
-    );
-    tempTasks.push(
-      <Button
-        key={uuid()}
-        color="secondary"
-        className={styles.addTask}
-        onClick={this.toggleAddTaskModal}
-      >
-        <FontAwesomeIcon icon={faPlus} className="mr-2" />
-        Add Task
-      </Button>
-    );
-    this.setState({
-      tasks: tempTasks,
-      taskName: "Name",
-      taskDescription: "Description",
-      taskDuration: 0,
-      taskDurationType: 0,
-    });
-  };
-
   render() {
     return (
       <div>
-        <div className={styles.todoContainer}>{this.state.tasks}</div>
-        <div>{this.state.memberTimelines}</div>
+        <div className={styles.todoContainer} ref={this.todoRef}>
+          {this.props.todoTasks.map((task) => {
+            let taskRef = React.createRef();
+            this.props.addTaskReference(task.taskId, taskRef);
+
+            return (
+              <Task
+                taskID={task.taskId}
+                handleStop={this.props.handleStop}
+                key={task.key}
+                name={task.title}
+                description={task.description}
+                duration={task.description}
+                durationType={task.durationType}
+                ref={taskRef}
+                assignee={task.userId}
+              ></Task>
+            );
+          })}
+          <Button
+            key={uuid()}
+            color="secondary"
+            className={styles.addTask}
+            onClick={this.props.addTaskModal}
+            assignee={-1}
+          >
+            <FontAwesomeIcon icon={faPlus} className="mr-2" />
+            Add Task
+          </Button>
+        </div>
         <div>
-          <this.renderAddTaskModal />
+          {this.props.project.Member.map((member) => {
+            let timelineRef = React.createRef();
+            this.props.addTimelineReference(member.userId, timelineRef);
+            return (
+              <MemberTimeline
+                key={uuid()}
+                memberID={member.userId}
+                name={member.name}
+                ref={timelineRef}
+                tasks={member.taskList?.map((task) => {
+                  let taskRef = React.createRef();
+                  this.props.addTaskReference(task.taskId, taskRef);
+                  return (
+                    <Task
+                      taskID={task.taskId}
+                      handleStop={this.props.handleStop}
+                      key={task.key}
+                      name={task.title}
+                      description={task.description}
+                      duration={task.description}
+                      durationType={task.durationType}
+                      ref={taskRef}
+                      assignee={task.userId}
+                    ></Task>
+                  );
+                })}
+              ></MemberTimeline>
+            );
+          })}
         </div>
       </div>
     );

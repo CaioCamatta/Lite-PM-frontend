@@ -1,13 +1,12 @@
-.duration {
-    width: 30pt;
-}
-
-.taskInput {
-    width: 348pt;
-}
-
-.durationText {
-    margin-right: 89.5pt;
+.todoContainer {
+    display: flex;
+    align-items: center;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #c0b9b9;
+    border-radius: 15pt;
+    flex-wrap: wrap;
+    margin-bottom: 10pt;
 }
 
 .addTask {
@@ -25,15 +24,4 @@
     height: 28pt;
     text-align: center;
     
-}
-
-.todoContainer {
-    display: flex;
-    align-items: center;
-    border-width: 2px;
-    border-style: solid;
-    border-color: #c0b9b9;
-    border-radius: 15pt;
-    flex-wrap: wrap;
-    margin-bottom: 10pt;
 }
