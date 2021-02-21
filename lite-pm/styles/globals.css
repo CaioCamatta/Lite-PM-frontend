@@ -2,8 +2,8 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: Quicksand, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+    Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif !important;
 }
 
 a {
@@ -21,4 +21,12 @@ a {
 
 .rounded-xl {
   border-radius: 0.65rem !important;
+}
+
+.mt-7 {
+  margin-top: 5rem !important;
+}
+
+.text-110 {
+  font-size: 110%;
 }

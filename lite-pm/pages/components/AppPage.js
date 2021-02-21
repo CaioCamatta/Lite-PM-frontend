@@ -11,15 +11,15 @@ import {
 
 import styles from "../../styles/AppPage.module.css";
 
-import Navigationbar from "./Navigationbar";
+import Layout from "./Layout";
 import ProjectDetails from "./ProjectDetails";
 import TeamMember from "./TeamMember";
 import Timeline from "./Timeline";
+import MemberTimeline from "./MemberTimeline";
 import ProjectDocuments from "./ProjectDocuments";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-
 import axios from "axios";
 import uuid from "react-uuid";
 
@@ -86,6 +86,18 @@ class AppPage extends Component {
   }
 
   componentDidMount() {
+
+    let project = window.location.href.toString();
+    let testcase = project.split("/projects/");
+    this.setState(
+      {
+        projectId: testcase[1],
+      },
+      () => {
+        this.getProjectDetails();
+      }
+    );
+
     //reset the member task lists
     let members = this.state.project.members;
     let todos = this.state.todoTasks;
@@ -272,7 +284,7 @@ class AppPage extends Component {
     //const urlParams = new URLSearchParams(queryString)
     //const projectId = urlParams.get('projectId');
     //Used for testing need to remove after for production
-    const projectId = "944f27b6-e6a0-4f2b-af4b-2d3911fc7d76";
+    const projectId = this.state.project.projectId;
     axios.post(`${baseUrl}/api/members/create`, {
       projectId: projectId,
       name: this.state.memberName,
@@ -415,26 +427,30 @@ class AppPage extends Component {
       apiBaseUrl: baseUrl,
       projectId: this.state?.project?.projectId,
     };
-
     return (
-      <div>
-        <Navigationbar></Navigationbar>
-        <Container className="mt-5 mb-5">
-          <ProjectDetails></ProjectDetails>
-          <h2 className={styles.h2}>The Team</h2>
-          {/* add map for team members */}
-          <div className="d-flex">{this.state.teamMembers}</div>
-          <Button
-            color="secondary mt-2"
-            className={styles.add}
-            onClick={this.toggleAddMemberModal}
-          >
-            <FontAwesomeIcon icon={faPlus} className="mr-2" />
-            Add Member
-          </Button>
-          <h2 className={styles.h2}>Tasks and Timeline</h2>
-          <h2 className={styles.todoHeader}>To-do</h2>
-          <Timeline
+      <Layout>
+        <div>
+          <Container className="mt-5 mb-5">
+            <ProjectDetails
+              projname={this.state.project.projectName}
+              description={this.state.project.Description}
+              duration={this.state.project.Duration}
+              projectLink={this.state.project.projectId}
+            />
+            <h2 className={styles.h2}>The Team</h2>
+            {/* add map for team members */}
+            <div className="d-flex">{this.state.teamMembers}</div>
+            <Button
+              color="secondary mt-2"
+              className={styles.add}
+              onClick={this.toggleAddMemberModal}
+            >
+              <FontAwesomeIcon icon={faPlus} className="mr-2" />
+              Add Member
+            </Button>
+            <h2 className={styles.h2}>Tasks and Timeline</h2>
+            <h2 className={styles.todoHeader}>To-do</h2>
+            <Timeline
             project={this.state.project}
             handleStop={this.handleStop}
             addTimelineReference={this.addTimelineReference}
@@ -443,20 +459,41 @@ class AppPage extends Component {
             addTaskModal={this.toggleAddTaskModal}
           ></Timeline>
 
-          <ProjectDocuments
-            documents={this.state.project.documents}
-            className="mt-5"
-            {...commonProps}
-          />
-        </Container>
+            <ProjectDocuments
+              documents={this.state.project.documents}
+              className="mt-5"
+              {...commonProps}
+            />
+          </Container>
 
-        <div>
-          <this.renderCreateMemberModal />
-          <this.renderAddTaskModal />
+          <div>
+            <this.renderCreateMemberModal />
+            <this.renderAddTaskModal />
+          </div>
         </div>
-      </div>
+      </Layout>
     );
   }
+  
+  getProjectDetails = () => {
+    return axios
+      .get(`${baseUrl}/api/project/get/${this.state.projectId}`, {})
+      .then(
+        (res) => {
+          this.setState(
+            {
+              project: res.data,
+            },
+            () => {
+              console.log(this.state.project.Member);
+            }
+          );
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+  };
 }
 
 export default AppPage;
