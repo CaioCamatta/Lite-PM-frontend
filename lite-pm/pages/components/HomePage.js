@@ -65,9 +65,11 @@ handleChange(event) {
         isOpen={this.state.showAddProject}
         toggle={this.toggleAddProjectModal}
       >
-        <ModalHeader>Create a new project!</ModalHeader>
-        <ModalBody className="text-center">
+        <ModalHeader className="modal-header border-0">Create a new project!</ModalHeader>
+        <ModalBody className="text-left">
           <label>
+            Project Name
+            <br/>
             <input
               className={styles.inputs}
               name="projectName"
@@ -78,6 +80,8 @@ handleChange(event) {
           </label>
           <br />
           <label>
+            Description
+            <br/>
             <input
               className={styles.inputs}
               name="projectDescription"
@@ -88,6 +92,8 @@ handleChange(event) {
           </label>
           <br />
           <label>
+            Duration
+            <br/>
             <input
               className={styles.duration}
               name="projectDuration"
@@ -96,13 +102,12 @@ handleChange(event) {
               onChange={this.handleChange}
             />
           </label>
-          <br />
         </ModalBody>
-        <ModalFooter>
-          <Button color="secondary" onClick={this.toggleAddProjectModal}>
+        <ModalFooter className="modal-footer border-0">
+          <Button outline color="secondary" onClick={this.toggleAddProjectModal}>
             cancel
           </Button>
-          <Button color="success" onClick={this.addProject}>
+          <Button color="secondary" onClick={this.addProject}>
             Create Project
           </Button>
         </ModalFooter>
