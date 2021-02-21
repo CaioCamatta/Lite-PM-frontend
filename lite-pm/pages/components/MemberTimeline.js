@@ -27,7 +27,10 @@ export default class MemberTimeline extends Component {
       <div className={styles.timelineContainer}>
         <div className={styles.name}>{this.state.name}</div>
         <div className={styles.timeline} ref={this.props.reference}>
-          <div className="position-relative">
+          <div
+            className="position-relative overflow-hidden rounded-xl"
+            style={{ height: 35 }}
+          >
             {this.props.tasks.map((task) => {
               return (
                 <Task
