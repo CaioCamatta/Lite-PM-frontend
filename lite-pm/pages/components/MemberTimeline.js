@@ -7,6 +7,8 @@ export default class MemberTimeline extends Component {
   constructor(props) {
     super(props);
 
+    // Replace leftTimestamp and rightTimestamp with
+    //    parameters from parent once Caleb is done the changes
     const DAY_AND_HALF = 1000 * 60 * 60 * 36;
 
     const leftTimestamp = Date.now() - DAY_AND_HALF;
@@ -38,6 +40,9 @@ export default class MemberTimeline extends Component {
                   left={`${
                     ((task.startDate * 1000 - this.state.leftTimestamp) * 100) /
                     this.state.spanTimestamp
+                  }%`}
+                  width={`${
+                    (task.duration * 1000 * 100) / this.state.spanTimestamp
                   }%`}
                 ></Task>
               );

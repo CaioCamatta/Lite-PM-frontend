@@ -31,12 +31,9 @@ export default class Task extends Component {
         defaultPosition={{ x: 0, y: 0 }}
         onStop={this.props.handleStop}
       >
-        <div
-          className={this.props.className}
-          style={{ left: this.props.left }}
-        >
+        <div className={this.props.className} style={{ left: this.props.left , width: this.props.width}}>
           <Button
-            className={styles.box}
+            className={`w-100 ${styles.box}`}
             onClick={this.toggleDisplayTask}
             disabled={true}
           >

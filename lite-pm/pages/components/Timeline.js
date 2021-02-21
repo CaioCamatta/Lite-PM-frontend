@@ -131,6 +131,16 @@ export default class Timeline extends Component {
     );
   };
 
+  roundToNearestHour(timestamp) {
+    // Round milliseconds timestamp to nearest hour
+    return Math.round(timestamp / (3600 * 1000)) * 3600 * 1000;
+  }
+
+  roundToNearestDate(timestamp) {
+    // Round milliseconds timestamp to nearest date at midnight
+    return Math.round(timestamp / (60 * 60 * 24 * 1000)) * 60 * 60 * 24 * 1000;
+  }
+
   calculateTimeTicks = () => {
     let timeTicks = [];
     let rightTimestamp, leftTimestamp;
@@ -139,8 +149,12 @@ export default class Timeline extends Component {
       // When timelineScope is set to Hours, timeline will span three days
       const DAY_AND_HALF = 1000 * 3600 * 36;
 
-      leftTimestamp = Date.now() - DAY_AND_HALF;
-      rightTimestamp = Date.now() + DAY_AND_HALF;
+      leftTimestamp = this.roundToNearestHour(
+        Math.round(Date.now() - DAY_AND_HALF)
+      ); // Round to nearest hour
+      rightTimestamp = this.roundToNearestHour(
+        Math.round(Date.now() + DAY_AND_HALF)
+      ); // Round to nearest hour
       const THREE_HOURS = 1000 * 60 * 60 * 3;
 
       var currTime = leftTimestamp;
@@ -153,8 +167,8 @@ export default class Timeline extends Component {
       // When timelineScope is set to Hours, timeline will span two weeks
       const WEEK = 1000 * 60 * 60 * 24 * 7;
 
-      leftTimestamp = Date.now() - WEEK;
-      rightTimestamp = Date.now() + WEEK;
+      leftTimestamp = this.roundToNearestDate(Math.round(Date.now() - WEEK)); // Round to nearest hour
+      rightTimestamp = this.roundToNearestDate(Math.round(Date.now() + WEEK)); // Round to nearest hour
       const ONE_DAY = 1000 * 60 * 60 * 24;
 
       var currTime = leftTimestamp;
