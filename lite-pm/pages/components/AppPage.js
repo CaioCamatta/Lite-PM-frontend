@@ -473,37 +473,7 @@ class AppPage extends Component {
       </Layout>
     );
   }
-  componentDidMount() {
-    let project = window.location.href.toString();
-    let testcase = project.split("/projects/");
-    this.setState(
-      {
-        projectId: testcase[1],
-      },
-      () => {
-        this.getProjectDetails();
-      }
-    );
-  }
-  getProjectDetails = () => {
-    return axios
-      .get(`${baseUrl}/api/project/get/${this.state.projectId}`, {})
-      .then(
-        (res) => {
-          this.setState(
-            {
-              project: res.data,
-            },
-            () => {
-              console.log(this.state.project.Member);
-            }
-          );
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
-  };
+  
   assignTask(userId) {
     const projectId = this.state.project.projectId;
     let startTime = Math.round(new Date().getTime() / 1000);
