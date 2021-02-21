@@ -225,6 +225,21 @@ class AppPage extends Component {
       userId: -1,
     });
 
+    //Put the task connection code here!
+    if (this.state.taskDurationType === 0) {
+      this.state.taskDuration = this.state.taskDuration * 3600;
+    } else {
+      this.state.taskDuration = this.state.taskDuration * 86400;
+    }
+
+    const projectId = this.state.project.projectId
+    axios.post(`${baseUrl}/api/tasks/create`, {
+      projectId: projectId,
+      title: this.state.taskName,
+      duration: this.state.taskDuration,
+      description: this.state.taskDescription,
+    });
+
     this.setState(
       {
         Task: tempTasks,
