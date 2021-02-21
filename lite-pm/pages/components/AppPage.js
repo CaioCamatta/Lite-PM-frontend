@@ -8,10 +8,9 @@ import {
   ModalFooter,
 } from "reactstrap";
 
-const baseUrl = "http://localhost:5000";
 import styles from "../../styles/AppPage.module.css";
 
-import Navigationbar from "./Navigationbar";
+import Layout from "./Layout";
 import ProjectDetails from "./ProjectDetails";
 import TeamMember from "./TeamMember";
 import Timeline from "./Timeline";
@@ -22,6 +21,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import uuid from "react-uuid";
+
+const baseUrl = `http://localhost:5000`;
 
 class AppPage extends Component {
   constructor(props) {
@@ -167,40 +168,41 @@ class AppPage extends Component {
       projectId: this.state?.project?.projectId,
     };
     return (
-      <div>
-        <Navigationbar></Navigationbar>
-        <Container className="mt-5 mb-5">
-          <ProjectDetails
-            projname={this.state.project.projectName}
-            description={this.state.project.Description}
-            duration={this.state.project.Duration}
-            projectLink={this.state.project.projectId}
-          />
-          <h2 className={styles.h2}>The Team</h2>
-          <div className="d-flex">{this.state.teamMembers}</div>
-          <Button
-            color="secondary mt-2"
-            className={styles.add}
-            onClick={this.toggleAddMemberModal}
-          >
-            <FontAwesomeIcon icon={faPlus} className="mr-2" />
-            Add Member
-          </Button>
-          <h2 className={styles.h2}>Tasks and Timeline</h2>
-          <h2 className={styles.todoHeader}>To-do</h2>
-          <Timeline timelines={this.state.memberTimelines}></Timeline>
-
-          <ProjectDocuments
-            documents={this.state.project.documents}
-            className="mt-5"
-            {...commonProps}
-          />
-        </Container>
-
+      <Layout>
         <div>
-          <this.renderCreateMemberModal />
+          <Container className="mt-5 mb-5">
+            <ProjectDetails
+              projname={this.state.project.projectName}
+              description={this.state.project.Description}
+              duration={this.state.project.Duration}
+              projectLink={this.state.project.projectId}
+            />
+            <h2 className={styles.h2}>The Team</h2>
+            <div className="d-flex">{this.state.teamMembers}</div>
+            <Button
+              color="secondary mt-2"
+              className={styles.add}
+              onClick={this.toggleAddMemberModal}
+            >
+              <FontAwesomeIcon icon={faPlus} className="mr-2" />
+              Add Member
+            </Button>
+            <h2 className={styles.h2}>Tasks and Timeline</h2>
+            <h2 className={styles.todoHeader}>To-do</h2>
+            <Timeline timelines={this.state.memberTimelines}></Timeline>
+
+            <ProjectDocuments
+              documents={this.state.project.documents}
+              className="mt-5"
+              {...commonProps}
+            />
+          </Container>
+
+          <div>
+            <this.renderCreateMemberModal />
+          </div>
         </div>
-      </div>
+      </Layout>
     );
   }
   componentDidMount() {
