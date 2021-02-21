@@ -39,5 +39,5 @@
 }
 
 .timeTicks{
-    padding-left: 128px;
+    border-left: 128px solid transparent;
 }

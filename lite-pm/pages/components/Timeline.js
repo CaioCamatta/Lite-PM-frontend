@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import {
   Button,
   Modal,
@@ -9,6 +9,7 @@ import {
 } from "reactstrap";
 import styles from "../../styles/Timeline.module.css";
 import Task from "./Task";
+import * as _ from "underscore";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -21,6 +22,11 @@ export default class Timeline extends Component {
   //include a state for to do/ complete and in progress
   constructor(props) {
     super(props);
+    this.ref = React.createRef();
+    this.throttledMouseMove = _.throttle(
+      this.throttledMouseMove.bind(this),
+      60
+    );
     this.state = {
       showAddTask: false,
       taskName: "Name",
@@ -40,6 +46,10 @@ export default class Timeline extends Component {
       ],
       memberTimelines: this.props.timelines,
       timelineScope: "hour",
+      isScrolling: false,
+      clientX: 0,
+      scrollX: 0,
+      offset: 0,
     };
   }
 
@@ -141,7 +151,7 @@ export default class Timeline extends Component {
     return Math.round(timestamp / (60 * 60 * 24 * 1000)) * 60 * 60 * 24 * 1000;
   }
 
-  calculateTimeTicks = () => {
+  calculateTimeTicks = (offset) => {
     let timeTicks = [];
     let rightTimestamp, leftTimestamp;
 
@@ -150,10 +160,10 @@ export default class Timeline extends Component {
       const DAY_AND_HALF = 1000 * 3600 * 36;
 
       leftTimestamp = this.roundToNearestHour(
-        Math.round(Date.now() - DAY_AND_HALF)
+        Math.round(Date.now() - DAY_AND_HALF) + offset
       ); // Round to nearest hour
       rightTimestamp = this.roundToNearestHour(
-        Math.round(Date.now() + DAY_AND_HALF)
+        Math.round(Date.now() + DAY_AND_HALF) + offset
       ); // Round to nearest hour
       const THREE_HOURS = 1000 * 60 * 60 * 3;
 
@@ -167,8 +177,12 @@ export default class Timeline extends Component {
       // When timelineScope is set to Hours, timeline will span two weeks
       const WEEK = 1000 * 60 * 60 * 24 * 7;
 
-      leftTimestamp = this.roundToNearestDate(Math.round(Date.now() - WEEK)); // Round to nearest hour
-      rightTimestamp = this.roundToNearestDate(Math.round(Date.now() + WEEK)); // Round to nearest hour
+      leftTimestamp = this.roundToNearestDate(
+        Math.round(Date.now() - WEEK) + offset
+      ); // Round to nearest hour
+      rightTimestamp = this.roundToNearestDate(
+        Math.round(Date.now() + WEEK) + offset
+      ); // Round to nearest hour
       const ONE_DAY = 1000 * 60 * 60 * 24;
 
       var currTime = leftTimestamp;
@@ -180,6 +194,36 @@ export default class Timeline extends Component {
     }
 
     return [timeTicks, leftTimestamp, rightTimestamp];
+  };
+
+  onMouseDown = (e) => {
+    console.log("Down");
+    console.log(e.clientX);
+    e.preventDefault();
+    this.setState({ isScrolling: true, clientX: e.clientX });
+  };
+
+  onMouseUp = () => {
+    console.log("Up");
+    this.setState({ isScrolling: false });
+  };
+
+  onMouseMove = (e) => {
+    e.persist();
+    this.throttledMouseMove(e);
+  };
+
+  throttledMouseMove = (e) => {
+    const { clientX, scrollX } = this.state;
+    if (this.state.isScrolling) {
+      console.log("Move");
+      console.log(scrollX + e.clientX - clientX);
+      this.setState({
+        scrollX: scrollX + e.clientX - clientX,
+        clientX: e.clientX,
+        offset: (scrollX + e.clientX - clientX) * 1000 * 60 * 4,
+      });
+    }
   };
 
   addTask = () => {
@@ -217,14 +261,34 @@ export default class Timeline extends Component {
   };
 
   render() {
-    const timeTicks = this.calculateTimeTicks()[0];
+    const [timeTicks, leftTimestamp, rightTimestamp] = this.calculateTimeTicks(
+      this.state.offset
+    );
+    const currentRelativeTime =
+      ((Date.now() - leftTimestamp) * 100) / (rightTimestamp - leftTimestamp);
 
     return (
       <div>
         <div className={styles.todoContainer}>{this.state.tasks}</div>
         <div
-          className={`w-100 pr-2 d-flex justify-content-between text-muted small mb-2 ${styles.timeTicks}`}
+          ref={this.ref}
+          onMouseDown={this.onMouseDown}
+          onMouseUp={this.onMouseUp}
+          onMouseMove={this.onMouseMove}
+          data-heigth="100px"
+          left="12%"
+          style={{ cursor: "grabbing" }}
+          className={`w-100 pr-2 d-flex justify-content-between position-relative text-muted small mb-2 ${styles.timeTicks}`}
         >
+          <span
+            className="d-inline-block position-absolute"
+            style={{
+              height: 19 + 5 + 50.7 * this.state.memberTimelines.length,
+              width: 2,
+              background: "#749ffff0",
+              left: `${currentRelativeTime}%`,
+            }}
+          ></span>
           {timeTicks.map((tick) => {
             return <span>{tick}</span>;
           })}
