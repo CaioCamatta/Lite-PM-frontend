@@ -36,10 +36,26 @@ class AppPage extends Component {
       teamMembers: [],
       project: {
         projectId: "944f27b6-e6a0-4f2b-af4b-2d3911fc7d76",
-        Task: [  //Tasks
-          { taskId: "23123413", userId: "jas", title: "some task", status: "inProgress" }, //
-          { taskId: "23129413", userId: -1, title: "another task", status: "todo" },
-          { taskId: "1234", userId: "caleb", title: "todo task", status: "inProgress" },
+        Task: [
+          //Tasks
+          {
+            taskId: "23123413",
+            userId: "jas",
+            title: "some task",
+            status: "inProgress",
+          }, //
+          {
+            taskId: "23129413",
+            userId: -1,
+            title: "another task",
+            status: "todo",
+          },
+          {
+            taskId: "1234",
+            userId: "caleb",
+            title: "todo task",
+            status: "inProgress",
+          },
         ],
         documents: [
           {
@@ -54,7 +70,7 @@ class AppPage extends Component {
             userId: "caleb",
             email: "asdas@asd.com",
             name: "caleb",
-            taskList: []
+            taskList: [],
           },
           {
             userId: "jas",
@@ -82,21 +98,20 @@ class AppPage extends Component {
     this.addTeamMember = this.addTeamMember.bind(this);
     this.toggleAddMemberModal = this.toggleAddMemberModal.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.renderCreateMemberModal = this.renderCreateMemberModal.bind(this);    
+    this.renderCreateMemberModal = this.renderCreateMemberModal.bind(this);
   }
 
   componentDidMount() {
-
-    // let project = window.location.href.toString();
-    // let testcase = project.split("/projects/");
-    // this.setState(
-    //   {
-    //     projectId: testcase[1],
-    //   },
-    //   () => {
-    //     this.getProjectDetails();
-    //   }
-    // );
+    let project = window.location.href.toString();
+    let testcase = project.split("/projects/");
+    this.setState(
+      {
+        projectId: testcase[1],
+      },
+      () => {
+        this.getProjectDetails();
+      }
+    );
 
     //reset the member task lists
     let members = this.state.project.Member;
@@ -142,9 +157,8 @@ class AppPage extends Component {
         }
       }
 
-      this.setState({ Member: members, todoTasks: todos })
+      this.setState({ Member: members, todoTasks: todos });
     });
-    
   };
 
   toggleAddTaskModal = () => {
@@ -268,16 +282,6 @@ class AppPage extends Component {
 
   addTeamMember() {
     this.toggleAddMemberModal();
-    let members = this.state.teamMembers;
-    members.push(
-      <TeamMember
-        key={uuid()}
-        name={this.state.memberName}
-        email={this.state.memberEmail}
-        git={this.state.memberGit}
-        phone={this.state.memberPhone}
-      ></TeamMember>
-    );
 
     //This creates members into the database
     //const queryString = window.location.search;
@@ -285,16 +289,18 @@ class AppPage extends Component {
     //const projectId = urlParams.get('projectId');
     //Used for testing need to remove after for production
     const projectId = this.state.project.projectId;
+    console.log(projectId);
     axios.post(`${baseUrl}/api/members/create`, {
       projectId: projectId,
       name: this.state.memberName,
       email: this.state.memberEmail,
       github: this.state.memberGit,
       phone: this.state.memberPhone,
-    });
+    }).then(()=>{this.getProjectDetails()});
+
+    
 
     this.setState({
-      teamMembers: members,
       memberName: "Name",
       memberEmail: "Email",
       memberGit: "Github Link",
@@ -383,8 +389,8 @@ class AppPage extends Component {
     //loop through timeline references
     //if draggable x,y is close to a reference, get that references memberID and set the tasks userId to that memberID
     //when changing the userId, we must update the database (for now just change it in the state if possible)
-    console.log(reference)
-    console.log(this.timelineReferences)
+    console.log(reference);
+    console.log(this.timelineReferences);
     for (let i = 0; i < timelineKeys.length; i++) {
       let timelineY =
         this.timelineReferences[
@@ -394,7 +400,7 @@ class AppPage extends Component {
           timelineKeys[i]
         ].current.childRef.current.getBoundingClientRect().height /
           2;
-      
+
       if (Math.abs(draggableY - timelineY) < 30) {
         let tasks = this.state.project.Task;
         //if the task was already there, do nothing (snap back into place)
@@ -410,7 +416,6 @@ class AppPage extends Component {
             //if its currently inProgress and moved to todo, then set userId to null and change to todo
             //if its in progress and moves to completed then just change the status
             if (tasks[j].taskId === reference.props.taskID) {
-
               tasks[j].userId = this.timelineReferences[
                 timelineKeys[i]
               ].current.props.memberID;
@@ -418,7 +423,7 @@ class AppPage extends Component {
             }
           }
 
-          this.setState({ Task: tasks}, () => {
+          this.setState({ Task: tasks }, () => {
             this.refreshTasks();
           });
         }
@@ -427,25 +432,26 @@ class AppPage extends Component {
     }
   };
 
-  // getProjectDetails = () => {
-  //   return axios
-  //     .get(`${baseUrl}/api/project/get/${this.state.projectId}`, {})
-  //     .then(
-  //       (res) => {
-  //         this.setState(
-  //           {
-  //             project: res.data,
-  //           },
-  //           () => {
-  //             console.log(this.state.project);
-  //           }
-  //         );
-  //       },
-  //       (err) => {
-  //         console.log(err);
-  //       }
-  //     );
-  // };
+  getProjectDetails = () => {
+    console.log("here")
+    return axios
+      .get(`${baseUrl}/api/project/get/${this.state.projectId}`, {})
+      .then(
+        (res) => {
+          this.setState(
+            {
+              project: res.data,
+            },
+            () => {
+              console.log(this.state.project);
+            }
+          );
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+  };
 
   render() {
     const commonProps = {
@@ -464,7 +470,18 @@ class AppPage extends Component {
             />
             <h2 className={styles.h2}>The Team</h2>
             {/* add map for team members */}
-            <div className="d-flex">{this.state.teamMembers}</div>
+            <div className="d-flex">
+              {this.state.project.Member.map((member) => {
+                return(
+                <TeamMember
+                  key={uuid()}
+                  name={member.name}
+                  email={member.email}
+                  git={member.github}
+                  phone={member.phone}
+                ></TeamMember>);
+              })}
+            </div>
             <Button
               color="secondary mt-2"
               className={styles.add}
@@ -476,13 +493,13 @@ class AppPage extends Component {
             <h2 className={styles.h2}>Tasks and Timeline</h2>
             <h2 className={styles.todoHeader}>To-do</h2>
             <Timeline
-            project={this.state.project}
-            handleStop={this.handleStop}
-            addTimelineReference={this.addTimelineReference}
-            addTaskReference={this.addTaskReference}
-            todoTasks={this.state.todoTasks}
-            addTaskModal={this.toggleAddTaskModal}
-          ></Timeline>
+              project={this.state.project}
+              handleStop={this.handleStop}
+              addTimelineReference={this.addTimelineReference}
+              addTaskReference={this.addTaskReference}
+              todoTasks={this.state.todoTasks}
+              addTaskModal={this.toggleAddTaskModal}
+            ></Timeline>
 
             <ProjectDocuments
               documents={this.state.project.documents}
@@ -499,8 +516,6 @@ class AppPage extends Component {
       </Layout>
     );
   }
-  
-  
 }
 
 export default AppPage;

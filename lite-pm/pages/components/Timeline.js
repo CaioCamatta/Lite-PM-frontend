@@ -69,7 +69,7 @@ export default class Timeline extends Component {
                 memberID={member.userId}
                 name={member.name}
                 ref={timelineRef}
-                tasks={member.taskList.map((task) => {
+                tasks={member.taskList?.map((task) => {
                   let taskRef = React.createRef();
                   this.props.addTaskReference(task.taskId, taskRef);
                   return (
