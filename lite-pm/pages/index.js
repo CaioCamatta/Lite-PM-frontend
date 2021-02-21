@@ -84,29 +84,37 @@ export default class HomePage extends Component {
         isOpen={this.state.showAddProject}
         toggle={this.toggleAddProjectModal}
       >
-        <ModalHeader>Create a new project!</ModalHeader>
-        <ModalBody className="text-center">
+        <ModalHeader className="modal-header border-0">
+          Create a new project!
+        </ModalHeader>
+        <ModalBody className="text-left">
           <label>
+            Project Name!
+            <br />
             <input
               className={styles.inputs}
               name="projectName"
               type="text"
-              placeholder="Project Name"
+              placeholder="Enter Project Name!"
               onChange={this.handleChange}
             />
           </label>
           <br />
           <label>
+            Project Description!
+            <br />
             <input
               className={styles.inputs}
               name="projectDescription"
               type="text"
-              placeholder="Description"
+              placeholder="Enter Project Description!"
               onChange={this.handleChange}
             />
           </label>
           <br />
           <label>
+            Duration
+            <br />
             <input
               className={styles.duration}
               name="projectDuration"
@@ -115,13 +123,16 @@ export default class HomePage extends Component {
               onChange={this.handleChange}
             />
           </label>
-          <br />
         </ModalBody>
-        <ModalFooter>
-          <Button color="secondary" onClick={this.toggleAddProjectModal}>
+        <ModalFooter className="modal-footer border-0">
+          <Button
+            outline
+            color="secondary"
+            onClick={this.toggleAddProjectModal}
+          >
             cancel
           </Button>
-          <Button color="success" onClick={this.addProject}>
+          <Button color="secondary" onClick={this.addProject}>
             Create Project
           </Button>
         </ModalFooter>
