@@ -225,6 +225,21 @@ class AppPage extends Component {
       userId: -1,
     });
 
+    //Put the task connection code here!
+    if (this.state.taskDurationType === 0) {
+      this.state.taskDuration = this.state.taskDuration * 3600;
+    } else {
+      this.state.taskDuration = this.state.taskDuration * 86400;
+    }
+
+    const projectId = this.state.project.projectId
+    axios.post(`${baseUrl}/api/tasks/create`, {
+      projectId: projectId,
+      title: this.state.taskName,
+      duration: this.state.taskDuration,
+      description: this.state.taskDescription,
+    });
+
     this.setState(
       {
         Task: tempTasks,
@@ -253,11 +268,6 @@ class AppPage extends Component {
   addTeamMember() {
     this.toggleAddMemberModal();
 
-    //This creates members into the database
-    //const queryString = window.location.search;
-    //const urlParams = new URLSearchParams(queryString)
-    //const projectId = urlParams.get('projectId');
-    //Used for testing need to remove after for production
     const projectId = this.state.project.projectId;
     axios.post(`${baseUrl}/api/members/create`, {
       projectId: projectId,
@@ -477,6 +487,89 @@ class AppPage extends Component {
         </div>
       </Layout>
     );
+  }
+  
+  assignTask(userId) {
+    const projectId = this.state.project.projectId;
+    let startTime = Math.round(new Date().getTime() / 1000);
+    axios
+      .post(`${baseUrl}/api/tasks/assign`, {
+        projectId: projectId,
+        userId: userId,
+        startTime: startTime,
+      })
+      .then(
+        (res) => {
+          this.setState({
+            project: res.data,
+          });
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+  };
+  editTask(taskId, title, duration, durationType, description) {
+    const projectId = this.state.project.projectId;
+    if (durationType === 0) {
+      duration = duration * 3600;
+    } else {
+      duration = duration * 86400;
+    }
+    axios
+      .post(`${baseUrl}/api/tasks/assign`, {
+        projectId: projectId,
+        taskId: taskId,
+        duration: duration,
+        title: title,
+        description: description
+      })
+      .then(
+        (res) => {
+          this.setState({
+            project: res.data,
+          });
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+  }
+  compeleteTask(userId) {
+    const projectId = this.state.project.projectId;
+    axios
+      .post(`${baseUrl}/api/tasks/complete`, {
+        projectId: projectId,
+        userId: userId,
+      })
+      .then(
+        (res) => {
+          this.setState({
+            project: res.data,
+          });
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+  };
+  deleteTask(taskId) {
+    const projectId = this.state.project.projectId;
+    axios
+      .post(`${baseUrl}/api/tasks/delete`, {
+        projectId: projectId,
+        taskId: taskId,
+      })
+      .then(
+        (res) => {
+          this.setState({
+            project: res.data,
+          });
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
   }
 }
 

@@ -32,3 +32,14 @@
     margin-bottom: 1rem !important;
   }
 }
+
+.duration {
+  width: 48pt;
+  border-radius: 5px;
+  border: 1px solid grey;
+}
+.inputs {
+  width: 348pt;
+  border-radius: 5px;
+  border: 1px solid grey;
+}

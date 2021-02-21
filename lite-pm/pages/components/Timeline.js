@@ -14,6 +14,8 @@ import Task from "./Task";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import uuid from "react-uuid";
+import axios from "axios";
+const baseUrl = `http://localhost:5000`;
 
 export default class Timeline extends Component {
   //create nice boxes, all must be same size - on click open up display modal for task showing all details
