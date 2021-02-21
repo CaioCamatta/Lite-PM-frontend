@@ -32,19 +32,19 @@ export default class Timeline extends Component {
         <div className={styles.todoContainer} ref={this.todoRef}>
           {this.props.todoTasks.map((task) => {
             let taskRef = React.createRef();
-            this.props.addTaskReference(task.taskID, taskRef);
+            this.props.addTaskReference(task.taskId, taskRef);
 
             return (
               <Task
-                taskID={task.taskID}
+                taskID={task.taskId}
                 handleStop={this.props.handleStop}
                 key={task.key}
-                name={task.name}
+                name={task.title}
                 description={task.description}
                 duration={task.description}
                 durationType={task.durationType}
                 ref={taskRef}
-                assignee={task.assignee}
+                assignee={task.userId}
               ></Task>
             );
           })}
@@ -60,29 +60,29 @@ export default class Timeline extends Component {
           </Button>
         </div>
         <div>
-          {this.props.project.members.map((member) => {
+          {this.props.project.Member.map((member) => {
             let timelineRef = React.createRef();
-            this.props.addTimelineReference(member.memberID, timelineRef);
+            this.props.addTimelineReference(member.userId, timelineRef);
             return (
               <MemberTimeline
                 key={uuid()}
-                memberID={member.memberID}
+                memberID={member.userId}
                 name={member.name}
                 ref={timelineRef}
                 tasks={member.taskList.map((task) => {
                   let taskRef = React.createRef();
-                  this.props.addTaskReference(task.taskID, taskRef);
+                  this.props.addTaskReference(task.taskId, taskRef);
                   return (
                     <Task
-                      taskID={task.taskID}
+                      taskID={task.taskId}
                       handleStop={this.props.handleStop}
                       key={task.key}
-                      name={task.name}
+                      name={task.title}
                       description={task.description}
                       duration={task.description}
                       durationType={task.durationType}
                       ref={taskRef}
-                      assignee={task.assignee}
+                      assignee={task.userId}
                     ></Task>
                   );
                 })}

@@ -36,10 +36,10 @@ class AppPage extends Component {
       teamMembers: [],
       project: {
         projectId: "944f27b6-e6a0-4f2b-af4b-2d3911fc7d76",
-        tasks: [
-          { taskID: "23123413", assignee: "jas", name: "some task" },
-          { taskID: "23129413", assignee: -1, name: "another task" },
-          { taskID: "1234", assignee: "caleb", name: "todo task" },
+        Task: [  //Tasks
+          { taskId: "23123413", userId: "jas", title: "some task", status: "inProgress" }, //
+          { taskId: "23129413", userId: -1, title: "another task", status: "todo" },
+          { taskId: "1234", userId: "caleb", title: "todo task", status: "inProgress" },
         ],
         documents: [
           {
@@ -49,18 +49,18 @@ class AppPage extends Component {
           },
           { title: "Design", url: "https://www.google.com/8sn3da1" },
         ],
-        members: [
+        Member: [
           {
-            memberID: "caleb",
+            userId: "caleb",
             email: "asdas@asd.com",
-            taskList: [],
             name: "caleb",
+            taskList: []
           },
           {
-            memberID: "jas",
+            userId: "jas",
             email: "asdas@asd.com",
-            taskList: [],
             name: "jas",
+            taskList: [],
           },
         ],
       },
@@ -87,62 +87,62 @@ class AppPage extends Component {
 
   componentDidMount() {
 
-    let project = window.location.href.toString();
-    let testcase = project.split("/projects/");
-    this.setState(
-      {
-        projectId: testcase[1],
-      },
-      () => {
-        this.getProjectDetails();
-      }
-    );
+    // let project = window.location.href.toString();
+    // let testcase = project.split("/projects/");
+    // this.setState(
+    //   {
+    //     projectId: testcase[1],
+    //   },
+    //   () => {
+    //     this.getProjectDetails();
+    //   }
+    // );
 
     //reset the member task lists
-    let members = this.state.project.members;
+    let members = this.state.project.Member;
     let todos = this.state.todoTasks;
 
     //assign all tasks to their proper locations
-    for (let i = 0; i < this.state.project.tasks.length; i++) {
-      if (this.state.project.tasks[i].assignee === -1) {
-        todos.push(this.state.project.tasks[i]);
+    for (let i = 0; i < this.state.project.Task.length; i++) {
+      if (this.state.project.Task[i].userId === -1) {
+        todos.push(this.state.project.Task[i]);
       } else {
-        for (let j = 0; j < this.state.project.members.length; j++) {
-          if (members[j].memberID === this.state.project.tasks[i].assignee) {
-            members[j].taskList.push(this.state.project.tasks[i]);
+        for (let j = 0; j < this.state.project.Member.length; j++) {
+          if (members[j].userId === this.state.project.Task[i].userId) {
+            members[j].taskList.push(this.state.project.Task[i]);
             break;
           }
         }
       }
     }
 
-    this.setState({ members: members, todoTasks: todos });
+    this.setState({ Member: members, todoTasks: todos });
   }
 
   refreshTasks = () => {
     //reset the member task lists
-    let wiper = this.state.project.members;
+    let wiper = this.state.project.Member;
     for (let i = 0; i < wiper.length; i++) {
       wiper[i].taskList = [];
     }
 
-    this.setState({ members: wiper, todoTasks: [] }, () => {
-      let members = this.state.project.members;
+    this.setState({ Member: wiper, todoTasks: [] }, () => {
+      let members = this.state.project.Member;
       let todos = this.state.todoTasks;
-      for (let i = 0; i < this.state.project.tasks.length; i++) {
-        if (this.state.project.tasks[i].assignee === -1) {
-          todos.push(this.state.project.tasks[i]);
+      for (let i = 0; i < this.state.project.Task.length; i++) {
+        if (this.state.project.Task[i].userId === -1) {
+          todos.push(this.state.project.Task[i]);
         } else {
           for (let j = 0; j < members.length; j++) {
-            if (members[j].memberID === this.state.project.tasks[i].assignee) {
-              members[j].taskList.push(this.state.project.tasks[i]);
+            if (members[j].userId === this.state.project.Task[i].userId) {
+              members[j].taskList.push(this.state.project.Task[i]);
               break;
             }
           }
         }
       }
 
-      this.setState({ members: members, todoTasks: todos })
+      this.setState({ Member: members, todoTasks: todos })
     });
     
   };
@@ -228,22 +228,22 @@ class AppPage extends Component {
 
   addTask = () => {
     this.toggleAddTaskModal();
-    let tempTasks = this.state.project.tasks;
+    let tempTasks = this.state.project.Task;
     tempTasks.push({
       handleStop: this.handleStop,
       key: uuid(),
-      taskID: uuid(),
+      taskId: uuid(),
       index: tempTasks.length,
-      name: this.state.taskName,
+      title: this.state.taskName,
       description: this.state.taskDescription,
       duration: this.state.taskDuration,
       durationType: this.state.taskDurationType,
-      assignee: -1,
+      userId: -1,
     });
 
     this.setState(
       {
-        tasks: tempTasks,
+        Task: tempTasks,
         taskName: "Name",
         taskDescription: "Description",
         taskDuration: 0,
@@ -381,8 +381,9 @@ class AppPage extends Component {
     //arrays of keys to the timelines
     let timelineKeys = Object.keys(this.timelineReferences);
     //loop through timeline references
-    //if draggable x,y is close to a reference, get that references memberID and set the tasks assignee to that memberID
-    //when changing the assignee, we must update the database (for now just change it in the state if possible)
+    //if draggable x,y is close to a reference, get that references memberID and set the tasks userId to that memberID
+    //when changing the userId, we must update the database (for now just change it in the state if possible)
+    console.log(reference)
     console.log(this.timelineReferences)
     for (let i = 0; i < timelineKeys.length; i++) {
       let timelineY =
@@ -395,8 +396,8 @@ class AppPage extends Component {
           2;
       
       if (Math.abs(draggableY - timelineY) < 30) {
-        let tasks = this.state.project.tasks;
-        //if the task was already there, do nothing
+        let tasks = this.state.project.Task;
+        //if the task was already there, do nothing (snap back into place)
         if (
           reference.props.assignee ===
           this.timelineReferences[timelineKeys[i]].current.props.memberID
@@ -404,16 +405,20 @@ class AppPage extends Component {
           break;
         } else {
           for (let j = 0; j < tasks.length; j++) {
-            //otherwise reset the assignee
-            if (tasks[j].taskID === reference.props.taskID) {
-              tasks[j].assignee = this.timelineReferences[
+            //otherwise change the attributes of the draggable task
+            //if its currently todo, then assign userid and put to inProgress
+            //if its currently inProgress and moved to todo, then set userId to null and change to todo
+            //if its in progress and moves to completed then just change the status
+            if (tasks[j].taskId === reference.props.taskID) {
+
+              tasks[j].userId = this.timelineReferences[
                 timelineKeys[i]
               ].current.props.memberID;
               break;
             }
           }
 
-          this.setState({ tasks: tasks}, () => {
+          this.setState({ Task: tasks}, () => {
             this.refreshTasks();
           });
         }
@@ -421,6 +426,26 @@ class AppPage extends Component {
       }
     }
   };
+
+  // getProjectDetails = () => {
+  //   return axios
+  //     .get(`${baseUrl}/api/project/get/${this.state.projectId}`, {})
+  //     .then(
+  //       (res) => {
+  //         this.setState(
+  //           {
+  //             project: res.data,
+  //           },
+  //           () => {
+  //             console.log(this.state.project);
+  //           }
+  //         );
+  //       },
+  //       (err) => {
+  //         console.log(err);
+  //       }
+  //     );
+  // };
 
   render() {
     const commonProps = {
@@ -445,7 +470,7 @@ class AppPage extends Component {
               className={styles.add}
               onClick={this.toggleAddMemberModal}
             >
-              <FontAwesomeIcon icon={faPlus} className="mr-2" />
+              <FontAwesomeIcon icon={faPlus} size={"xs"} className="mr-2" />
               Add Member
             </Button>
             <h2 className={styles.h2}>Tasks and Timeline</h2>
@@ -475,25 +500,7 @@ class AppPage extends Component {
     );
   }
   
-  getProjectDetails = () => {
-    return axios
-      .get(`${baseUrl}/api/project/get/${this.state.projectId}`, {})
-      .then(
-        (res) => {
-          this.setState(
-            {
-              project: res.data,
-            },
-            () => {
-              console.log(this.state.project.Member);
-            }
-          );
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
-  };
+  
 }
 
 export default AppPage;
