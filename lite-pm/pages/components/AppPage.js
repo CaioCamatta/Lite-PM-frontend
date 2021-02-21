@@ -38,24 +38,7 @@ class AppPage extends Component {
         projectId: "944f27b6-e6a0-4f2b-af4b-2d3911fc7d76",
         Task: [
           //Tasks
-          {
-            taskId: "23123413",
-            userId: "jas",
-            title: "some task",
-            status: "inProgress",
-          }, //
-          {
-            taskId: "23129413",
-            userId: -1,
-            title: "another task",
-            status: "todo",
-          },
-          {
-            taskId: "1234",
-            userId: "caleb",
-            title: "todo task",
-            status: "inProgress",
-          },
+          
         ],
         documents: [
           {
@@ -65,20 +48,7 @@ class AppPage extends Component {
           },
           { title: "Design", url: "https://www.google.com/8sn3da1" },
         ],
-        Member: [
-          {
-            userId: "caleb",
-            email: "asdas@asd.com",
-            name: "caleb",
-            taskList: [],
-          },
-          {
-            userId: "jas",
-            email: "asdas@asd.com",
-            name: "jas",
-            taskList: [],
-          },
-        ],
+        Member: [],
       },
       showAddMember: false,
       memberName: "Name",
@@ -289,7 +259,6 @@ class AppPage extends Component {
     //const projectId = urlParams.get('projectId');
     //Used for testing need to remove after for production
     const projectId = this.state.project.projectId;
-    console.log(projectId);
     axios.post(`${baseUrl}/api/members/create`, {
       projectId: projectId,
       name: this.state.memberName,
@@ -370,6 +339,7 @@ class AppPage extends Component {
 
   addTimelineReference = (id, reference) => {
     this.timelineReferences[id] = reference;
+    console.log(this.timelineReferences)
   };
 
   addTaskReference = (id, reference) => {
@@ -389,8 +359,6 @@ class AppPage extends Component {
     //loop through timeline references
     //if draggable x,y is close to a reference, get that references memberID and set the tasks userId to that memberID
     //when changing the userId, we must update the database (for now just change it in the state if possible)
-    console.log(reference);
-    console.log(this.timelineReferences);
     for (let i = 0; i < timelineKeys.length; i++) {
       let timelineY =
         this.timelineReferences[
@@ -433,7 +401,6 @@ class AppPage extends Component {
   };
 
   getProjectDetails = () => {
-    console.log("here")
     return axios
       .get(`${baseUrl}/api/project/get/${this.state.projectId}`, {})
       .then(
