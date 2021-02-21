@@ -339,7 +339,6 @@ class AppPage extends Component {
 
   addTimelineReference = (id, reference) => {
     this.timelineReferences[id] = reference;
-    console.log(this.timelineReferences)
   };
 
   addTaskReference = (id, reference) => {
@@ -408,9 +407,6 @@ class AppPage extends Component {
           this.setState(
             {
               project: res.data,
-            },
-            () => {
-              console.log(this.state.project);
             }
           );
         },
@@ -436,12 +432,11 @@ class AppPage extends Component {
               projectLink={this.state.project.projectId}
             />
             <h2 className={styles.h2}>The Team</h2>
-            {/* add map for team members */}
             <div className="d-flex">
-              {this.state.project.Member.map((member) => {
+              {this.state.project.Member.map((member, index) => {
                 return(
                 <TeamMember
-                  key={uuid()}
+                  key={index}
                   name={member.name}
                   email={member.email}
                   git={member.github}
