@@ -24,7 +24,7 @@ export default function Layout({ children }) {
             rel="stylesheet"
           />
           <NavbarBrand>LitePM</NavbarBrand>
-          <Nav className="ml-5 " navbar-nav>
+          <Nav className="ml-5 ">
             <NavItem>
               <Link href="/">
                 <a>
