@@ -30,17 +30,16 @@ class AppPage extends Component {
       teamMembers: [],
       memberTimelines: [],
       project: {
-        projectName:"Loading",
+        projectName: "Loading",
         Description: "Loading Description",
         Duration: "Loading Duration",
-        projectId: "Loading"
+        projectId: "Loading",
       },
       showAddMember: false,
       memberName: "Name",
       memberEmail: "Email",
       memberGit: "Github Link",
       memberPhone: "Phone Number",
-      
     };
 
     this.addTeamMember = this.addTeamMember.bind(this);
@@ -61,7 +60,6 @@ class AppPage extends Component {
       [name]: value,
     });
   }
-  
 
   addTeamMember() {
     this.toggleAddMemberModal();
@@ -84,11 +82,6 @@ class AppPage extends Component {
       ></MemberTimeline>
     );
 
-    //This creates members into the database
-    //const queryString = window.location.search;
-    //const urlParams = new URLSearchParams(queryString)
-    //const projectId = urlParams.get('projectId');
-    //Used for testing need to remove after for production
     const projectId = this.state.project.projectId;
     axios.post(`${baseUrl}/api/members/create`, {
       projectId: projectId,
@@ -180,10 +173,10 @@ class AppPage extends Component {
           <ProjectDetails
             projname={this.state.project.projectName}
             description={this.state.project.Description}
-            duration = {this.state.project.Duration}
-            projectLink = {this.state.project.projectId}
+            duration={this.state.project.Duration}
+            projectLink={this.state.project.projectId}
           />
-          <h2 className={styles.h2}>The Team</h2>         
+          <h2 className={styles.h2}>The Team</h2>
           <div className="d-flex">{this.state.teamMembers}</div>
           <Button
             color="secondary mt-2"
@@ -232,7 +225,7 @@ class AppPage extends Component {
               project: res.data,
             },
             () => {
-              console.log(this.state.project.Member)
+              console.log(this.state.project.Member);
             }
           );
         },
@@ -241,6 +234,88 @@ class AppPage extends Component {
         }
       );
   };
+  assignTask(userId) {
+    const projectId = this.state.project.projectId;
+    let startTime = Math.round(new Date().getTime() / 1000);
+    axios
+      .post(`${baseUrl}/api/tasks/assign`, {
+        projectId: projectId,
+        userId: userId,
+        startTime: startTime,
+      })
+      .then(
+        (res) => {
+          this.setState({
+            project: res.data,
+          });
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+  };
+  editTask(taskId, title, duration, durationType, description) {
+    const projectId = this.state.project.projectId;
+    if (durationType === 0) {
+      duration = duration * 3600;
+    } else {
+      duration = duration * 86400;
+    }
+    axios
+      .post(`${baseUrl}/api/tasks/assign`, {
+        projectId: projectId,
+        taskId: taskId,
+        duration: duration,
+        title: title,
+        description: description
+      })
+      .then(
+        (res) => {
+          this.setState({
+            project: res.data,
+          });
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+  }
+  compeleteTask(userId) {
+    const projectId = this.state.project.projectId;
+    axios
+      .post(`${baseUrl}/api/tasks/complete`, {
+        projectId: projectId,
+        userId: userId,
+      })
+      .then(
+        (res) => {
+          this.setState({
+            project: res.data,
+          });
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+  };
+  deleteTask(taskId) {
+    const projectId = this.state.project.projectId;
+    axios
+      .post(`${baseUrl}/api/tasks/delete`, {
+        projectId: projectId,
+        taskId: taskId,
+      })
+      .then(
+        (res) => {
+          this.setState({
+            project: res.data,
+          });
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+  }
 }
 
 export default AppPage;

@@ -164,10 +164,6 @@ export default class Timeline extends Component {
     } else {
       this.state.taskDuration = this.state.taskDuration * 86400;
     }
-    //This creates tasks into the database
-    //const queryString = window.location.search;
-    //const urlParams = new URLSearchParams(queryString)
-    //const projectId = urlParams.get('projectId');
 
     const projectId = "944f27b6-e6a0-4f2b-af4b-2d3911fc7d76"; //Used for testing need to remove after for production
     axios.post(`${baseUrl}/api/tasks/create`, {
