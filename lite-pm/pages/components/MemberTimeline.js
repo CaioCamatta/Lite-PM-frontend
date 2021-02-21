@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import styles from "../../styles/MemberTimeline.module.css";
 import Task from "./Task";
@@ -7,24 +7,18 @@ export default class MemberTimeline extends Component {
   constructor(props) {
     super(props);
 
-    // Replace leftTimestamp and rightTimestamp with
-    //    parameters from parent once Caleb is done the changes
-    const DAY_AND_HALF = 1000 * 60 * 60 * 36;
-
-    const leftTimestamp = Date.now() - DAY_AND_HALF;
-    const rightTimestamp = Date.now() + DAY_AND_HALF;
-
     this.state = {
       name: this.props.name,
-      leftTimestamp: leftTimestamp,
-      rightTimestamp: rightTimestamp,
-      spanTimestamp: rightTimestamp - leftTimestamp,
+      leftTimestamp: props.leftTimestamp,
+      rightTimestamp: props.rightTimestamp,
+      spanTimestamp: props.rightTimestamp - props.leftTimestamp,
     };
+    this.childRef = React.createRef();
   }
 
   render() {
     return (
-      <div className={styles.timelineContainer}>
+      <div className={styles.timelineContainer} ref={this.childRef}>
         <div className={styles.name}>{this.state.name}</div>
         <div className={styles.timeline} ref={this.props.reference}>
           <div

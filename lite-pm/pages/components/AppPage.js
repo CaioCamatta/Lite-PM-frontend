@@ -6,11 +6,12 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
+  ButtonGroup,
 } from "reactstrap";
 
 import styles from "../../styles/AppPage.module.css";
 
-import Navigationbar from "./Navigationbar";
+import Layout from "./Layout";
 import ProjectDetails from "./ProjectDetails";
 import TeamMember from "./TeamMember";
 import Timeline from "./Timeline";
@@ -19,20 +20,20 @@ import ProjectDocuments from "./ProjectDocuments";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-
 import axios from "axios";
 import uuid from "react-uuid";
-
-import ReactDom from "react-dom";
 
 const baseUrl = `http://localhost:5000`;
 
 class AppPage extends Component {
   constructor(props) {
     super(props);
+
+    this.timelineReferences = [];
+    this.taskReferences = [];
+
     this.state = {
       teamMembers: [],
-      memberTimelines: [],
       project: {
         projectId: "944f27b6-e6a0-4f2b-af4b-2d3911fc7d76",
         tasks: [
@@ -63,6 +64,7 @@ class AppPage extends Component {
           },
           { title: "Design", url: "https://www.google.com/8sn3da1" },
         ],
+        Member: [],
       },
       showAddMember: false,
       memberName: "Name",
@@ -70,15 +72,201 @@ class AppPage extends Component {
       memberGit: "Github Link",
       memberPhone: "Phone Number",
 
-      references: [],
+      showAddTask: false,
+      taskName: "Name",
+      taskDescription: "Description",
+      taskDuration: 0,
+      taskDurationType: 0, //0 for hours, 1 for days
+
+      todoTasks: [],
     };
+
     this.addTeamMember = this.addTeamMember.bind(this);
     this.toggleAddMemberModal = this.toggleAddMemberModal.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.renderCreateMemberModal = this.renderCreateMemberModal.bind(this);
-
-    this.textInput = React.createRef();
   }
+
+  componentDidMount() {
+    let project = window.location.href.toString();
+    let testcase = project.split("/projects/");
+    this.setState(
+      {
+        projectId: testcase[1],
+      },
+      () => {
+        this.getProjectDetails();
+      }
+    );
+
+    //reset the member task lists
+    let members = this.state.project.Member;
+    let todos = this.state.todoTasks;
+
+    //assign all tasks to their proper locations
+    for (let i = 0; i < this.state.project.Task.length; i++) {
+      if (this.state.project.Task[i].userId === -1) {
+        todos.push(this.state.project.Task[i]);
+      } else {
+        for (let j = 0; j < this.state.project.Member.length; j++) {
+          if (members[j].userId === this.state.project.Task[i].userId) {
+            members[j].taskList.push(this.state.project.Task[i]);
+            break;
+          }
+        }
+      }
+    }
+
+    this.setState({ Member: members, todoTasks: todos });
+  }
+
+  refreshTasks = () => {
+    //reset the member task lists
+    let wiper = this.state.project.Member;
+    for (let i = 0; i < wiper.length; i++) {
+      wiper[i].taskList = [];
+    }
+
+    this.setState({ Member: wiper, todoTasks: [] }, () => {
+      let members = this.state.project.Member;
+      let todos = this.state.todoTasks;
+      for (let i = 0; i < this.state.project.Task.length; i++) {
+        if (this.state.project.Task[i].userId === -1) {
+          todos.push(this.state.project.Task[i]);
+        } else {
+          for (let j = 0; j < members.length; j++) {
+            if (members[j].userId === this.state.project.Task[i].userId) {
+              members[j].taskList.push(this.state.project.Task[i]);
+              break;
+            }
+          }
+        }
+      }
+
+      this.setState({ Member: members, todoTasks: todos });
+    });
+  };
+
+  toggleAddTaskModal = () => {
+    this.setState({ showAddTask: !this.state.showAddTask });
+  };
+
+  setDurationType = (num) => {
+    this.setState({ taskDurationType: num });
+  };
+
+  renderAddTaskModal = () => {
+    return (
+      <Modal isOpen={this.state.showAddTask} toggle={this.toggleAddTaskModal}>
+        <ModalHeader>Add a Task</ModalHeader>
+        <ModalBody className="text-center">
+          <div className="float-left">
+            <label>
+              <div className="float-left">Title*</div>
+              <input
+                className={styles.taskInput}
+                name="taskName"
+                type="text"
+                placeholder="Title"
+                onChange={this.handleChange}
+              />
+            </label>
+            <br />
+            <label>
+              <div className="float-left">Description</div>
+              <input
+                className={styles.taskInput}
+                name="taskDescription"
+                type="text"
+                placeholder="Description"
+                onChange={this.handleChange}
+              />
+            </label>
+            <br />
+
+            <div className="float-left">
+              <div className={styles.durationText}>Duration*</div>
+              <label>
+                <input
+                  className={styles.duration}
+                  name="taskDuration"
+                  type="number"
+                  placeholder="0"
+                  onChange={this.handleChange}
+                />
+              </label>
+              <ButtonGroup className="ml-3">
+                <Button
+                  color="secondary"
+                  onClick={() => this.setDurationType(0)}
+                  active={this.state.taskDurationType === 0}
+                >
+                  Hours
+                </Button>
+                <Button
+                  color="secondary"
+                  onClick={() => this.setDurationType(1)}
+                  active={this.state.taskDurationType === 1}
+                >
+                  Days
+                </Button>
+              </ButtonGroup>
+            </div>
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={this.toggleAddTaskModal}>
+            cancel
+          </Button>
+          <Button color="success" onClick={this.addTask}>
+            Add Task
+          </Button>
+        </ModalFooter>
+      </Modal>
+    );
+  };
+
+  addTask = () => {
+    this.toggleAddTaskModal();
+    let tempTasks = this.state.project.Task;
+    tempTasks.push({
+      handleStop: this.handleStop,
+      key: uuid(),
+      taskId: uuid(),
+      index: tempTasks.length,
+      title: this.state.taskName,
+      description: this.state.taskDescription,
+      duration: this.state.taskDuration,
+      durationType: this.state.taskDurationType,
+      userId: -1,
+    });
+
+    //Put the task connection code here!
+    if (this.state.taskDurationType === 0) {
+      this.state.taskDuration = this.state.taskDuration * 3600;
+    } else {
+      this.state.taskDuration = this.state.taskDuration * 86400;
+    }
+
+    const projectId = this.state.project.projectId
+    axios.post(`${baseUrl}/api/tasks/create`, {
+      projectId: projectId,
+      title: this.state.taskName,
+      duration: this.state.taskDuration,
+      description: this.state.taskDescription,
+    });
+
+    this.setState(
+      {
+        Task: tempTasks,
+        taskName: "Name",
+        taskDescription: "Description",
+        taskDuration: 0,
+        taskDurationType: 0,
+      },
+      () => this.refreshTasks()
+    );
+  };
 
   toggleAddMemberModal() {
     this.setState({ showAddMember: !this.state.showAddMember });
@@ -95,51 +283,19 @@ class AppPage extends Component {
 
   addTeamMember() {
     this.toggleAddMemberModal();
-    let members = this.state.teamMembers;
-    members.push(
-      <TeamMember
-        key={uuid()}
-        name={this.state.memberName}
-        email={this.state.memberEmail}
-        git={this.state.memberGit}
-        phone={this.state.memberPhone}
-      ></TeamMember>
-    );
 
-    let timelines = this.state.memberTimelines;
-
-    let temp = React.createRef();
-    let tempRefs = this.state.references;
-    tempRefs.push(temp);
-    this.setState({ references: tempRefs });
-    console.log(this.state.references);
-
-    timelines.push(
-      <MemberTimeline
-        key={uuid()}
-        name={this.state.memberName}
-        reference={temp}
-        tasks={this.state.project.tasks}
-      ></MemberTimeline>
-    );
-
-    //This creates members into the database
-    //const queryString = window.location.search;
-    //const urlParams = new URLSearchParams(queryString)
-    //const projectId = urlParams.get('projectId');
-    //Used for testing need to remove after for production
-    const projectId = "944f27b6-e6a0-4f2b-af4b-2d3911fc7d76";
+    const projectId = this.state.project.projectId;
     axios.post(`${baseUrl}/api/members/create`, {
       projectId: projectId,
       name: this.state.memberName,
       email: this.state.memberEmail,
       github: this.state.memberGit,
       phone: this.state.memberPhone,
-    });
+    }).then(()=>{this.getProjectDetails()});
+
+    
 
     this.setState({
-      memberTimelines: timelines,
-      teamMembers: members,
       memberName: "Name",
       memberEmail: "Email",
       memberGit: "Github Link",
@@ -207,13 +363,83 @@ class AppPage extends Component {
     );
   }
 
-  handleStop = (event, draggableData) => {
-    let length = this.state.references.length;
-    for (let i = 0; i < length; i++) {
-      console.log(this.state.references[i].current.getBoundingClientRect());
-    }
+  addTimelineReference = (id, reference) => {
+    this.timelineReferences[id] = reference;
+  };
 
-    console.log(draggableData);
+  addTaskReference = (id, reference) => {
+    this.taskReferences[id] = reference;
+  };
+
+  handleStop = (event, draggableData) => {
+    let draggableY = event.y;
+    //get the key  of the draggableData to find in references
+    let index = draggableData.node.children[0].attributes.dataindex.value;
+
+    //reference to the task being moved
+    let reference = this.taskReferences[index].current;
+
+    //arrays of keys to the timelines
+    let timelineKeys = Object.keys(this.timelineReferences);
+    //loop through timeline references
+    //if draggable x,y is close to a reference, get that references memberID and set the tasks userId to that memberID
+    //when changing the userId, we must update the database (for now just change it in the state if possible)
+    for (let i = 0; i < timelineKeys.length; i++) {
+      let timelineY =
+        this.timelineReferences[
+          timelineKeys[i]
+        ].current.childRef.current.getBoundingClientRect().y +
+        this.timelineReferences[
+          timelineKeys[i]
+        ].current.childRef.current.getBoundingClientRect().height /
+          2;
+
+      if (Math.abs(draggableY - timelineY) < 30) {
+        let tasks = this.state.project.Task;
+        //if the task was already there, do nothing (snap back into place)
+        if (
+          reference.props.assignee ===
+          this.timelineReferences[timelineKeys[i]].current.props.memberID
+        ) {
+          break;
+        } else {
+          for (let j = 0; j < tasks.length; j++) {
+            //otherwise change the attributes of the draggable task
+            //if its currently todo, then assign userid and put to inProgress
+            //if its currently inProgress and moved to todo, then set userId to null and change to todo
+            //if its in progress and moves to completed then just change the status
+            if (tasks[j].taskId === reference.props.taskID) {
+              tasks[j].userId = this.timelineReferences[
+                timelineKeys[i]
+              ].current.props.memberID;
+              break;
+            }
+          }
+
+          this.setState({ Task: tasks }, () => {
+            this.refreshTasks();
+          });
+        }
+        break;
+      }
+    }
+  };
+
+  getProjectDetails = () => {
+    return axios
+      .get(`${baseUrl}/api/project/get/${this.state.projectId}`, {})
+      .then(
+        (res) => {
+          this.setState(
+            {
+              project: res.data,
+            }
+          );
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
   };
 
   render() {
@@ -221,41 +447,145 @@ class AppPage extends Component {
       apiBaseUrl: baseUrl,
       projectId: this.state?.project?.projectId,
     };
-
     return (
-      <div>
-        <Navigationbar></Navigationbar>
-        <Container className="mt-5 mb-5">
-          <ProjectDetails></ProjectDetails>
-          <h2 className={styles.h2}>The Team</h2>
-          <div className="d-flex">{this.state.teamMembers}</div>
-          <Button
-            color="secondary mt-2"
-            className={styles.add}
-            onClick={this.toggleAddMemberModal}
-          >
-            <FontAwesomeIcon icon={faPlus} className="mr-2" />
-            Add Member
-          </Button>
-          <h2 className={styles.h2}>Tasks and Timeline</h2>
-          <h2 className={styles.todoHeader}>To-do</h2>
-          <Timeline
-            timelines={this.state.memberTimelines}
-            handleStop={this.handleStop}
-          ></Timeline>
-
-          <ProjectDocuments
-            documents={this.state.project.documents}
-            className="mt-5"
-            {...commonProps}
-          />
-        </Container>
-
+      <Layout>
         <div>
-          <this.renderCreateMemberModal />
+          <Container className="mt-5 mb-5">
+            <ProjectDetails
+              projname={this.state.project.projectName}
+              description={this.state.project.Description}
+              duration={this.state.project.Duration}
+              projectLink={this.state.project.projectId}
+            />
+            <h2 className={styles.h2}>The Team</h2>
+            <div className="d-flex">
+              {this.state.project.Member.map((member, index) => {
+                return(
+                <TeamMember
+                  key={index}
+                  name={member.name}
+                  email={member.email}
+                  git={member.github}
+                  phone={member.phone}
+                ></TeamMember>);
+              })}
+            </div>
+            <Button
+              color="secondary mt-2"
+              className={styles.add}
+              onClick={this.toggleAddMemberModal}
+            >
+              <FontAwesomeIcon icon={faPlus} size={"xs"} className="mr-2" />
+              Add Member
+            </Button>
+            <h2 className={styles.h2}>Tasks and Timeline</h2>
+            <h2 className={styles.todoHeader}>To-do</h2>
+            <Timeline
+              project={this.state.project}
+              handleStop={this.handleStop}
+              addTimelineReference={this.addTimelineReference}
+              addTaskReference={this.addTaskReference}
+              todoTasks={this.state.todoTasks}
+              addTaskModal={this.toggleAddTaskModal}
+            ></Timeline>
+
+            <ProjectDocuments
+              documents={this.state.project.documents}
+              className="mt-5"
+              {...commonProps}
+            />
+          </Container>
+
+          <div>
+            <this.renderCreateMemberModal />
+            <this.renderAddTaskModal />
+          </div>
         </div>
-      </div>
+      </Layout>
     );
+  }
+  
+  assignTask(userId) {
+    const projectId = this.state.project.projectId;
+    let startTime = Math.round(new Date().getTime() / 1000);
+    axios
+      .post(`${baseUrl}/api/tasks/assign`, {
+        projectId: projectId,
+        userId: userId,
+        startTime: startTime,
+      })
+      .then(
+        (res) => {
+          this.setState({
+            project: res.data,
+          });
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+  };
+  editTask(taskId, title, duration, durationType, description) {
+    const projectId = this.state.project.projectId;
+    if (durationType === 0) {
+      duration = duration * 3600;
+    } else {
+      duration = duration * 86400;
+    }
+    axios
+      .post(`${baseUrl}/api/tasks/assign`, {
+        projectId: projectId,
+        taskId: taskId,
+        duration: duration,
+        title: title,
+        description: description
+      })
+      .then(
+        (res) => {
+          this.setState({
+            project: res.data,
+          });
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+  }
+  compeleteTask(userId) {
+    const projectId = this.state.project.projectId;
+    axios
+      .post(`${baseUrl}/api/tasks/complete`, {
+        projectId: projectId,
+        userId: userId,
+      })
+      .then(
+        (res) => {
+          this.setState({
+            project: res.data,
+          });
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+  };
+  deleteTask(taskId) {
+    const projectId = this.state.project.projectId;
+    axios
+      .post(`${baseUrl}/api/tasks/delete`, {
+        projectId: projectId,
+        taskId: taskId,
+      })
+      .then(
+        (res) => {
+          this.setState({
+            project: res.data,
+          });
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
   }
 }
 

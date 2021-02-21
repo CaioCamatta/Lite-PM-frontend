@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import styles from "../../styles/Task.module.css";
 
@@ -19,6 +19,8 @@ export default class Task extends Component {
       displayTask: false,
       durationType: this.props.durationType,
     };
+
+    this.childRef = React.createRef();
   }
 
   toggleDisplayTask = () => {
@@ -31,11 +33,16 @@ export default class Task extends Component {
         defaultPosition={{ x: 0, y: 0 }}
         onStop={this.props.handleStop}
       >
-        <div className={this.props.className} style={{ left: this.props.left , width: this.props.width}}>
+        <div
+          ref={this.childRef}
+          className={this.props.className}
+          style={{ left: this.props.left, width: this.props.width }}
+        >
           <Button
             className={`w-100 ${styles.box}`}
             onClick={this.toggleDisplayTask}
             disabled={true}
+            dataindex={this.props.taskID}
           >
             <div className={styles.contents}>{this.state.name}</div>
           </Button>
