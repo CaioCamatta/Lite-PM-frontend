@@ -15,7 +15,6 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 import uuid from "react-uuid";
 
-
 export default class Timeline extends Component {
   //create nice boxes, all must be same size - on click open up display modal for task showing all details
   //figure out how to have them nicely space in container
@@ -40,6 +39,7 @@ export default class Timeline extends Component {
         </Button>,
       ],
       memberTimelines: this.props.timelines,
+      timelineScope: "hour",
     };
   }
 
@@ -131,7 +131,42 @@ export default class Timeline extends Component {
     );
   };
 
-  
+  calculateTimeTicks = () => {
+    let timeTicks = [];
+    let rightTimestamp, leftTimestamp;
+
+    if (this.state.timelineScope == "hour") {
+      // When timelineScope is set to Hours, timeline will span three days
+      const DAY_AND_HALF = 1000 * 3600 * 36;
+
+      leftTimestamp = Date.now() - DAY_AND_HALF;
+      rightTimestamp = Date.now() + DAY_AND_HALF;
+      const THREE_HOURS = 1000 * 60 * 60 * 3;
+
+      var currTime = leftTimestamp;
+
+      while (currTime < rightTimestamp) {
+        timeTicks.push(new Date(currTime).getHours());
+        currTime += THREE_HOURS;
+      }
+    } else if (this.state.timelineScope == "day") {
+      // When timelineScope is set to Hours, timeline will span two weeks
+      const WEEK = 1000 * 60 * 60 * 24 * 7;
+
+      leftTimestamp = Date.now() - WEEK;
+      rightTimestamp = Date.now() + WEEK;
+      const ONE_DAY = 1000 * 60 * 60 * 24;
+
+      var currTime = leftTimestamp;
+
+      while (currTime < rightTimestamp) {
+        timeTicks.push(new Date(currTime).getDate());
+        currTime += ONE_DAY;
+      }
+    }
+
+    return [timeTicks, leftTimestamp, rightTimestamp];
+  };
 
   addTask = () => {
     this.toggleAddTaskModal();
@@ -144,7 +179,7 @@ export default class Timeline extends Component {
         description={this.state.taskDescription}
         duration={this.state.taskDuration}
         durationType={this.state.taskDurationType}
-        reference = {this.props.reference}
+        reference={this.props.reference}
       ></Task>
     );
     tempTasks.push(
@@ -168,9 +203,18 @@ export default class Timeline extends Component {
   };
 
   render() {
+    const timeTicks = this.calculateTimeTicks()[0];
+
     return (
       <div>
         <div className={styles.todoContainer}>{this.state.tasks}</div>
+        <div
+          className={`w-100 pr-2 d-flex justify-content-between text-muted small mb-2 ${styles.timeTicks}`}
+        >
+          {timeTicks.map((tick) => {
+            return <span>{tick}</span>;
+          })}
+        </div>
         <div>{this.state.memberTimelines}</div>
         <div>
           <this.renderAddTaskModal />
