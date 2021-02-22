@@ -32,6 +32,7 @@ export function ProjectDoc(props) {
             <FontAwesomeIcon
               icon={faExternalLinkAlt}
               className="ml-2 small text-muted"
+              width={18}
             />
           </span>
         </div>
@@ -44,7 +45,7 @@ export function ProjectDoc(props) {
             props.deleteDocument(props.documentId);
         }}
       >
-        <FontAwesomeIcon icon={faTrash} className="small text-muted" />
+        <FontAwesomeIcon icon={faTrash} className="small text-muted" width={18}/>
       </Button>
     </div>
   );
@@ -162,7 +163,7 @@ export default class ProjectDocuments extends Component {
             onClick={this.toggleCreateDocumentModal}
             className="mx-auto px-3 rounded-xl shadow-sm"
           >
-            <FontAwesomeIcon icon={faPlus} className="mr-2" />
+            <FontAwesomeIcon icon={faPlus} className="mr-2" width={18} />
             Add Document
           </Button>
         </div>

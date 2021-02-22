@@ -464,7 +464,7 @@ class AppPage extends Component {
               className={styles.add}
               onClick={this.toggleAddMemberModal}
             >
-              <FontAwesomeIcon icon={faPlus} size={"xs"} className="mr-2" />
+              <FontAwesomeIcon icon={faPlus} width={18} className="mr-2" />
               Add Member
             </Button>
             <h2 className={styles.h2}>Tasks and Timeline</h2>
