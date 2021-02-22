@@ -436,7 +436,7 @@ class AppPage extends Component {
     };
     return (
       <Layout>
-        <div style={{ minHeight: "90vh" }}>
+        <div style={{ minHeight: "90vh", marginBottom: 70 }}>
           <Container className="mt-5 mb-5">
             <ProjectDetails
               projname={this.state.project.projectName}
@@ -445,8 +445,8 @@ class AppPage extends Component {
               projectLink={this.state.project.projectId}
               {...commonProps}
             />
-            <h2 className={styles.h2}>The Team</h2>
-            <div className="d-flex">
+            <h2 className={`${styles.h2} mb-4`}>The Team</h2>
+            <div className="d-flex mb-3">
               {this.state.project.Member.map((member, index) => {
                 return (
                   <TeamMember
@@ -488,7 +488,7 @@ class AppPage extends Component {
 
             <ProjectDocuments
               documents={this.state.project.Document}
-              className="mt-5"
+              className="mt-5 pt-4"
               {...commonProps}
             />
           </Container>
