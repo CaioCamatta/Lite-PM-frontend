@@ -4,7 +4,6 @@ import styles from "../../styles/Task.module.css";
 
 import Draggable from "react-draggable";
 
-
 export default class Task extends Component {
   //create nice boxes, all must be same size - on click open up display modal for task showing all details
   //figure out how to have them nicely space in container
@@ -28,25 +27,35 @@ export default class Task extends Component {
     this.setState({ displayTask: !this.state.displayTask });
   };
 
-  
-
   render() {
     return (
-      <Draggable defaultPosition={{x: 0, y: 0}} onStop={this.props.handleStop} >
-        <div ref={this.childRef}>
-          <Button  dataindex={this.props.taskID} className={styles.box} onClick={this.toggleDisplayTask} disabled={true}>
-            <div className={styles.contents}>{this.state.name}</div>
+      <Draggable
+        defaultPosition={{ x: 0, y: 0 }}
+        onStop={this.props.handleStop}
+      >
+        <div
+          ref={this.childRef}
+          className={this.props.className}
+          style={{ left: this.props.left, width: this.props.width }}
+        >
+          <Button
+            className={`w-100 ${styles.box}`}
+            onClick={this.toggleDisplayTask}
+            disabled={true}
+            dataindex={this.props.taskID}
+          >
+            <div className={styles.contents}>{this.props.name}</div>
           </Button>
           <Modal
             isOpen={this.state.displayTask}
             toggle={this.toggleDisplayTask}
           >
-            <ModalHeader>{this.state.name}</ModalHeader>
+            <ModalHeader>{this.props.name}</ModalHeader>
             <ModalBody className="text-center">
-              {this.state.description}
+              {this.props.description}
               <div className="d-flex">
-                Duration: {this.state.duration}
-                {this.state.durationType === 0 ? (
+                Duration: {this.props.duration}
+                {this.props.durationType === 0 ? (
                   <div className="ml-1">Hours</div>
                 ) : (
                   <div>Days</div>

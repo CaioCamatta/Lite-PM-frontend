@@ -25,3 +25,7 @@
     text-align: center;
     
 }
+
+.timeTicks{
+    border-left: 128px solid transparent;
+}

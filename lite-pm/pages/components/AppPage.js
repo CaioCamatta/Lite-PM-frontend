@@ -35,19 +35,8 @@ class AppPage extends Component {
     this.state = {
       teamMembers: [],
       project: {
-        projectId: "944f27b6-e6a0-4f2b-af4b-2d3911fc7d76",
-        Task: [
-          //Tasks
-          
-        ],
-        documents: [
-          {
-            title: "Planning",
-            url: "https://www.google.com/9smc7h2",
-            documentId: "bdfe8bfe-ce0b-4bcf-aa4f-a6b31c1b42cc",
-          },
-          { title: "Design", url: "https://www.google.com/8sn3da1" },
-        ],
+        Task: [],
+        Document: [],
         Member: [],
       },
       showAddMember: false,
@@ -79,21 +68,27 @@ class AppPage extends Component {
         projectId: testcase[1],
       },
       () => {
-        this.getProjectDetails();
+        this.getProjectDetails(this.addTasksToMemberObjects);
       }
     );
+  }
 
+  addTasksToMemberObjects = () => {
     //reset the member task lists
     let members = this.state.project.Member;
     let todos = this.state.todoTasks;
 
     //assign all tasks to their proper locations
     for (let i = 0; i < this.state.project.Task.length; i++) {
-      if (this.state.project.Task[i].userId === -1) {
+      if (
+        this.state.project.Task[i].userId === -1 ||
+        !this.state.project.Task[i].userId
+      ) {
         todos.push(this.state.project.Task[i]);
       } else {
         for (let j = 0; j < this.state.project.Member.length; j++) {
           if (members[j].userId === this.state.project.Task[i].userId) {
+            members[j].taskList = members[j].taskList ?? [];
             members[j].taskList.push(this.state.project.Task[i]);
             break;
           }
@@ -102,7 +97,7 @@ class AppPage extends Component {
     }
 
     this.setState({ Member: members, todoTasks: todos });
-  }
+  };
 
   refreshTasks = () => {
     //reset the member task lists
@@ -232,7 +227,7 @@ class AppPage extends Component {
       this.state.taskDuration = this.state.taskDuration * 86400;
     }
 
-    const projectId = this.state.project.projectId
+    const projectId = this.state.project.projectId;
     axios.post(`${baseUrl}/api/tasks/create`, {
       projectId: projectId,
       title: this.state.taskName,
@@ -269,15 +264,17 @@ class AppPage extends Component {
     this.toggleAddMemberModal();
 
     const projectId = this.state.project.projectId;
-    axios.post(`${baseUrl}/api/members/create`, {
-      projectId: projectId,
-      name: this.state.memberName,
-      email: this.state.memberEmail,
-      github: this.state.memberGit,
-      phone: this.state.memberPhone,
-    }).then(()=>{this.getProjectDetails()});
-
-    
+    axios
+      .post(`${baseUrl}/api/members/create`, {
+        projectId: projectId,
+        name: this.state.memberName,
+        email: this.state.memberEmail,
+        github: this.state.memberGit,
+        phone: this.state.memberPhone,
+      })
+      .then(() => {
+        this.getProjectDetails();
+      });
 
     this.setState({
       memberName: "Name",
@@ -409,7 +406,7 @@ class AppPage extends Component {
     }
   };
 
-  getProjectDetails = () => {
+  getProjectDetails = (callback) => {
     return axios
       .get(`${baseUrl}/api/project/get/${this.state.projectId}`, {})
       .then(
@@ -417,6 +414,11 @@ class AppPage extends Component {
           this.setState(
             {
               project: res.data,
+            },
+            () => {
+              if (callback && typeof callback === "function") {
+                callback();
+              }
             }
           );
         },
@@ -444,14 +446,15 @@ class AppPage extends Component {
             <h2 className={styles.h2}>The Team</h2>
             <div className="d-flex">
               {this.state.project.Member.map((member, index) => {
-                return(
-                <TeamMember
-                  key={index}
-                  name={member.name}
-                  email={member.email}
-                  git={member.github}
-                  phone={member.phone}
-                ></TeamMember>);
+                return (
+                  <TeamMember
+                    key={index}
+                    name={member.name}
+                    email={member.email}
+                    git={member.github}
+                    phone={member.phone}
+                  ></TeamMember>
+                );
               })}
             </div>
             <Button
@@ -488,7 +491,7 @@ class AppPage extends Component {
       </Layout>
     );
   }
-  
+
   assignTask(userId) {
     const projectId = this.state.project.projectId;
     let startTime = Math.round(new Date().getTime() / 1000);
@@ -508,7 +511,7 @@ class AppPage extends Component {
           console.log(err);
         }
       );
-  };
+  }
   editTask(taskId, title, duration, durationType, description) {
     const projectId = this.state.project.projectId;
     if (durationType === 0) {
@@ -522,7 +525,7 @@ class AppPage extends Component {
         taskId: taskId,
         duration: duration,
         title: title,
-        description: description
+        description: description,
       })
       .then(
         (res) => {
@@ -552,7 +555,7 @@ class AppPage extends Component {
           console.log(err);
         }
       );
-  };
+  }
   deleteTask(taskId) {
     const projectId = this.state.project.projectId;
     axios
