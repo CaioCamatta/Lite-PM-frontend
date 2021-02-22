@@ -23,7 +23,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import uuid from "react-uuid";
 
-const baseUrl = `http://localhost:5000`;
+const baseUrl = `http://18.218.177.154:5000`;
 
 class AppPage extends Component {
   constructor(props) {
