@@ -119,40 +119,6 @@ export default class Timeline extends Component {
     }
   };
 
-  addTask = () => {
-    this.toggleAddTaskModal();
-    let tempTasks = this.state.tasks;
-    tempTasks[tempTasks.length - 1] = (
-      <Task
-        handleStop={this.props.handleStop}
-        key={uuid()}
-        name={this.state.taskName}
-        description={this.state.taskDescription}
-        duration={this.state.taskDuration}
-        durationType={this.state.taskDurationType}
-        reference={this.props.reference}
-      ></Task>
-    );
-    tempTasks.push(
-      <Button
-        key={uuid()}
-        color="secondary"
-        className={styles.addTask}
-        onClick={this.toggleAddTaskModal}
-      >
-        <FontAwesomeIcon icon={faPlus} className="mr-2" />
-        Add Task
-      </Button>
-    );
-    this.setState({
-      tasks: tempTasks,
-      taskName: "Name",
-      taskDescription: "Description",
-      taskDuration: 0,
-      taskDurationType: 0,
-    });
-  };
-
   render() {
     const [timeTicks, leftTimestamp, rightTimestamp] = this.calculateTimeTicks(
       this.state.offset
