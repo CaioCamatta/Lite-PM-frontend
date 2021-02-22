@@ -25,7 +25,7 @@ export default class Todo extends Component {
           onClick={this.props.addTaskModal}
           assignee={-1}
         >
-          <FontAwesomeIcon icon={faPlus} className="mr-2" />
+          <FontAwesomeIcon icon={faPlus} className="mr-2" width={18} />
           Add Task
         </Button>
       </div>

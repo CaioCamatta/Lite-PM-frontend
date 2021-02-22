@@ -19,7 +19,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import uuid from "react-uuid";
 import axios from "axios";
-const baseUrl = `http://localhost:5000`;
+const baseUrl = `http://18.218.177.154:5000`;
 
 export default class Timeline extends Component {
   //create nice boxes, all must be same size - on click open up display modal for task showing all details
@@ -166,7 +166,7 @@ export default class Timeline extends Component {
           <span
             className="d-inline-block position-absolute"
             style={{
-              height: 19 + 5 + 50.7 * this.props.project.Member.length,
+              height: 19 + 5 + 50.7 * this.props.project?.Member.length,
               width: 2,
               background: "#749ffff0",
               left: `${currentRelativeTime}%`,
