@@ -172,7 +172,7 @@ export default class Timeline extends Component {
           <span
             className="d-inline-block position-absolute"
             style={{
-              height: 19 + 5 + 50.7 * this.props.project.Member.length,
+              height: 19 + 5 + 50.7 * this.props.project?.Member.length,
               width: 2,
               background: "#749ffff0",
               left: `${currentRelativeTime}%`,
