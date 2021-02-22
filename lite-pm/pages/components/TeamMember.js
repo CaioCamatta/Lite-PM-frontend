@@ -14,7 +14,7 @@ export default class TeamMember extends Component {
 
   render() {
     return (
-      <div className={styles.box}>
+      <div className={`${styles.box} p-1 pr-2`}>
         <div className={styles.title}>{this.state.displayName}</div>
         <div className={styles.contents}>{this.state.displayEmail}</div>
         <div className={styles.contents}>{this.state.displayGit}</div>
