@@ -19,7 +19,7 @@ import MemberTimeline from "./MemberTimeline";
 import ProjectDocuments from "./ProjectDocuments";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import uuid from "react-uuid";
 
@@ -436,7 +436,7 @@ class AppPage extends Component {
     };
     return (
       <Layout>
-        <div>
+        <div style={{ minHeight: "90vh" }}>
           <Container className="mt-5 mb-5">
             <ProjectDetails
               projname={this.state.project.projectName}
@@ -461,13 +461,21 @@ class AppPage extends Component {
             </div>
             <Button
               color="secondary mt-2"
-              className={styles.add}
+              className={`btn-brand1 ${styles.add}`}
               onClick={this.toggleAddMemberModal}
             >
               <FontAwesomeIcon icon={faPlus} width={18} className="mr-2" />
               Add Member
             </Button>
             <h2 className={styles.h2}>Tasks and Timeline</h2>
+            <p className="small text-muted mb-4 mt-2">
+              <FontAwesomeIcon
+                icon={faInfoCircle}
+                width={18}
+                className="mr-2"
+              />
+              Drag and drop tasks to assign them. Drag timeline to move it.
+            </p>
             <h2 className={styles.todoHeader}>To-do</h2>
             <Timeline
               project={this.state.project}
