@@ -174,6 +174,7 @@ export default class HomePage extends Component {
                   size="lg"
                   color="secondary mb-4"
                   onClick={this.toggleAddProjectModal}
+                  className="btn-brand1"
                 >
                   Start Project
                 </Button>
@@ -270,6 +271,7 @@ export default class HomePage extends Component {
                 color="secondary mx-auto"
                 size="lg"
                 onClick={this.toggleAddProjectModal}
+                className="btn-brand1"
               >
                 Start Project
               </Button>

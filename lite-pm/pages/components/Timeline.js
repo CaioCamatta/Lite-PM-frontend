@@ -150,11 +150,11 @@ export default class Timeline extends Component {
           <Button
             key={uuid()}
             color="secondary"
-            className={styles.addTask}
+            className={`${styles.addTask} btn-brand1`}
             onClick={this.props.addTaskModal}
             assignee={-1}
           >
-            <FontAwesomeIcon icon={faPlus} className="mr-2" />
+            <FontAwesomeIcon icon={faPlus} className="mr-2 align-middle" width={18}/>
             Add Task
           </Button>
         </div>
@@ -172,7 +172,7 @@ export default class Timeline extends Component {
           <span
             className="d-inline-block position-absolute"
             style={{
-              height: 19 + 5 + 50.7 * this.props.project.Member.length,
+              height: 19 + 5 + 50.7 * this.props.project?.Member.length,
               width: 2,
               background: "#749ffff0",
               left: `${currentRelativeTime}%`,

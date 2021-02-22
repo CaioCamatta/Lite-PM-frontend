@@ -32,9 +32,9 @@ export default function Layout({ children }) {
                 </a>
               </Link>
             </NavItem>
-            <NavItem>
+            {/* <NavItem>
               <NavLink>App</NavLink>
-            </NavItem>
+            </NavItem> */}
           </Nav>
         </Container>
       </Navbar>

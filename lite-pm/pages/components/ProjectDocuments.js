@@ -32,6 +32,7 @@ export function ProjectDoc(props) {
             <FontAwesomeIcon
               icon={faExternalLinkAlt}
               className="ml-2 small text-muted"
+              width={18}
             />
           </span>
         </div>
@@ -39,9 +40,12 @@ export function ProjectDoc(props) {
       <Button
         className="ml-auto my-auto py-2 px-3"
         color="light"
-        onClick={() => props.deleteDocument(props.documentId)}
+        onClick={() => {
+          if (window.confirm("Are you sure you want to delete this Document?"))
+            props.deleteDocument(props.documentId);
+        }}
       >
-        <FontAwesomeIcon icon={faTrash} className="small text-muted" />
+        <FontAwesomeIcon icon={faTrash} className="small text-muted" width={18}/>
       </Button>
     </div>
   );
@@ -64,8 +68,7 @@ export default class ProjectDocuments extends Component {
       })
       .then(
         (response) => {
-          this.toggleCreateDocumentModal();
-          console.log(response);
+          this.props.getProjectDetails();
         },
         (error) => {
           console.log(error);
@@ -82,7 +85,8 @@ export default class ProjectDocuments extends Component {
       })
       .then(
         (response) => {
-          console.log(response);
+          this.toggleCreateDocumentModal();
+          this.props.getProjectDetails();
         },
         (error) => {
           console.log(error);
@@ -157,9 +161,9 @@ export default class ProjectDocuments extends Component {
         <div className="w-100 d-flex">
           <Button
             onClick={this.toggleCreateDocumentModal}
-            className="mx-auto px-3 rounded-xl shadow-sm"
+            className="mx-auto px-3 rounded-xl shadow-sm btn-brand1"
           >
-            <FontAwesomeIcon icon={faPlus} className="mr-2" />
+            <FontAwesomeIcon icon={faPlus} className="mr-2" width={18} />
             Add Document
           </Button>
         </div>
