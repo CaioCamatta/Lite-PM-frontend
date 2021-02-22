@@ -42,6 +42,7 @@ export default class Timeline extends Component {
     };
     this.todoRef = React.createRef();
     this.completedRef = React.createRef();
+    this.garbageRef = React.createRef();
   }
 
   roundToNearestHour(timestamp) {
@@ -132,6 +133,7 @@ export default class Timeline extends Component {
       ((Date.now() - leftTimestamp) * 100) / (rightTimestamp - leftTimestamp);
     this.props.addTimelineReference("todoTimeline", this.todoRef)
     this.props.addTimelineReference("completedTimeline", this.completedRef)
+    this.props.addTimelineReference("garbage", this.garbageRef)
     return (
       <div className="overflow-hidden">
         <Todo ref={this.todoRef} addTaskModal={this.props.addTaskModal} tasks={this.props?.todoTasks?.map((task, index) => {
@@ -143,6 +145,7 @@ export default class Timeline extends Component {
                 taskID={task.taskId}
                 handleStop={this.props.handleStop}
                 key={index}
+                status={task.status}
                 name={task.title}
                 description={task.description}
                 duration={task.description}
@@ -198,6 +201,7 @@ export default class Timeline extends Component {
                       handleStop={this.props.handleStop}
                       key={task.key}
                       name={task.title}
+                      status={task.status}
                       description={task.description}
                       duration={task.duration}
                       durationType={task.durationType}
@@ -222,6 +226,7 @@ export default class Timeline extends Component {
                 handleStop={this.props.handleStop}
                 key={index}
                 name={task.title}
+                status={task.status}
                 description={task.description}
                 duration={task.description}
                 durationType={task.durationType}
@@ -230,7 +235,7 @@ export default class Timeline extends Component {
               ></Task>
             );
           })}></Completed>
-          <Garbage></Garbage>
+          <Garbage ref={this.garbageRef}></Garbage>
       </div>
     );
   }

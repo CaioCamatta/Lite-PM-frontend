@@ -69,36 +69,10 @@ class AppPage extends Component {
         projectId: testcase[1],
       },
       () => {
-        this.getProjectDetails(this.addTasksToMemberObjects);
+        this.getProjectDetails(this.refreshTasks);
       }
     );
   }
-
-  addTasksToMemberObjects = () => {
-    //reset the member task lists
-    let members = this.state.project.Member;
-    let todos = this.state.todoTasks;
-
-    //assign all tasks to their proper locations
-    for (let i = 0; i < this.state.project.Task.length; i++) {
-      if (
-        this.state.project.Task[i].userId === -1 ||
-        !this.state.project.Task[i].userId
-      ) {
-        todos.push(this.state.project.Task[i]);
-      } else {
-        for (let j = 0; j < this.state.project.Member.length; j++) {
-          if (members[j].userId === this.state.project.Task[i].userId) {
-            members[j].taskList = members[j].taskList ?? [];
-            members[j].taskList.push(this.state.project.Task[i]);
-            break;
-          }
-        }
-      }
-    }
-
-    this.setState({ Member: members, todoTasks: todos });
-  };
 
   refreshTasks = () => {
     //reset the member task lists
@@ -107,12 +81,15 @@ class AppPage extends Component {
       wiper[i].taskList = [];
     }
 
-    this.setState({ Member: wiper, todoTasks: [] }, () => {
+    this.setState({ Member: wiper, todoTasks: [], completedTasks: [] }, () => {
       let members = this.state.project.Member;
       let todos = this.state.todoTasks;
+      let completed = this.state.completedTasks;
       for (let i = 0; i < this.state.project.Task.length; i++) {
-        if (this.state.project.Task[i].userId === -1) {
+        if (this.state.project.Task[i].status === "todo") {
           todos.push(this.state.project.Task[i]);
+        } else if (this.state.project.Task[i].status === "completed") {
+          completed.push(this.state.project.Task[i]);
         } else {
           for (let j = 0; j < members.length; j++) {
             if (members[j].userId === this.state.project.Task[i].userId) {
@@ -123,7 +100,11 @@ class AppPage extends Component {
         }
       }
 
-      this.setState({ Member: members, todoTasks: todos });
+      this.setState({
+        Member: members,
+        todoTasks: todos,
+        completedTasks: completed,
+      });
     });
   };
 
@@ -209,17 +190,6 @@ class AppPage extends Component {
   addTask = () => {
     this.toggleAddTaskModal();
     let tempTasks = this.state.project.Task;
-    tempTasks.push({
-      handleStop: this.handleStop,
-      key: uuid(),
-      taskId: uuid(),
-      index: tempTasks.length,
-      title: this.state.taskName,
-      description: this.state.taskDescription,
-      duration: this.state.taskDuration,
-      durationType: this.state.taskDurationType,
-      userId: -1,
-    });
 
     //Put the task connection code here!
     if (this.state.taskDurationType === 0) {
@@ -229,23 +199,44 @@ class AppPage extends Component {
     }
 
     const projectId = this.state.project.projectId;
-    axios.post(`${baseUrl}/api/tasks/create`, {
-      projectId: projectId,
-      title: this.state.taskName,
-      duration: this.state.taskDuration,
-      description: this.state.taskDescription,
-    });
+    axios
+      .post(`${baseUrl}/api/tasks/create`, {
+        projectId: projectId,
+        title: this.state.taskName,
+        duration: this.state.taskDuration,
+        description: this.state.taskDescription,
+      })
+      .then((id) => {
+        tempTasks.push({
+          handleStop: this.handleStop,
+          key: uuid(),
+          taskId: id.data,
+          index: tempTasks.length,
+          title: this.state.taskName,
+          status: "todo",
+          description: this.state.taskDescription,
+          duration: this.state.taskDuration,
+          durationType: this.state.taskDurationType,
+          userId: "",
+        });
+        
+        this.setState(
+          {
+            Task: tempTasks,
+            taskName: "Name",
+            taskDescription: "Description",
+            taskDuration: 0,
+            taskDurationType: 0,
+          },
+          () => {
+            this.refreshTasks();
+            this.getProjectDetails();
 
-    this.setState(
-      {
-        Task: tempTasks,
-        taskName: "Name",
-        taskDescription: "Description",
-        taskDuration: 0,
-        taskDurationType: 0,
-      },
-      () => this.refreshTasks()
-    );
+          }
+        );
+      });
+
+    
   };
 
   toggleAddMemberModal() {
@@ -363,6 +354,17 @@ class AppPage extends Component {
 
     //arrays of keys to the timelines
     let timelineKeys = Object.keys(this.timelineReferences);
+
+    //reference.props.assignee
+    //reference.props.status
+    console.log("The draggable taskId is:",reference.props.taskID)
+    
+
+    //this.timelineReferences[timelineKeys[i]].current.childRef.current
+    //this.timelineReferences[timelineKeys[i]].current.props.memberID
+
+    //can distinguish using keys for the names of the references
+
     //loop through timeline references
     //if draggable x,y is close to a reference, get that references memberID and set the tasks userId to that memberID
     //when changing the userId, we must update the database (for now just change it in the state if possible)
@@ -377,34 +379,166 @@ class AppPage extends Component {
           2;
 
       if (Math.abs(draggableY - timelineY) < 30) {
-        let tasks = this.state.project.Task;
+        let location = this.findTask(reference);
+        if (timelineKeys[i] === "garbage") {
+          //delete the task
+          let tasks = this.state.project.Task;
+          tasks.splice(location, 1);
+          this.setState({ Task: tasks }, () => {
+            this.refreshTasks();
+            this.deleteTask(reference.props.taskID);
+          });
+          console.log("garbage");
+        }
         //if the task was already there, do nothing (snap back into place)
-        if (
+        else if (
+          reference.props.status === "todo" &&
+          timelineKeys[i] === "todoTimeline"
+        ) {
+          this.refreshTasks();
+          console.log("todo to todo");
+
+          //snap task back into place and dont change anything (probs call refresh tasks)
+        } else if (
+          reference.props.status === "completed" &&
+          timelineKeys[i] === "completedTimeline"
+        ) {
+          this.refreshTasks();
+          console.log("complete to complete");
+
+          //snap task back into place and dont change anything (probs call refresh tasks)
+        }
+        //if you are moving from todo to somewhere else
+        else if (
+          reference.props.status === "todo" &&
+          timelineKeys[i] != "todoTimeline"
+        ) {
+          if (timelineKeys[i] === "completedTimeline") {
+            let tasks = this.state.project.Task;
+            tasks[location].status = "completed";
+            this.setState({ Task: tasks }, () => {
+              this.refreshTasks();
+              this.completeTask(reference.props.taskID);
+            });
+            console.log("todo to complete");
+
+            //change status of the task to complete and leave userId
+          } else {
+            let tasks = this.state.project.Task;
+            tasks[location].userId = this.timelineReferences[
+              timelineKeys[i]
+            ].current.props.memberID;
+            tasks[location].status = "inProgress";
+            this.setState({ Task: tasks }, () => {
+              this.refreshTasks();
+              this.assignTask(
+                this.timelineReferences[timelineKeys[i]].current.props.memberID,
+                reference.props.taskID
+              );
+            });
+            console.log("todo to member");
+
+            //set a new userId for the task to the proper memberId and change the status
+          }
+        }
+        //moving from completed to somewhere else
+        else if (
+          reference.props.status === "completed" &&
+          timelineKeys[i] != "completedTimeline"
+        ) {
+          if (timelineKeys[i] === "todoTimeline") {
+            let tasks = this.state.project.Task;
+            tasks[location].status = "todo";
+            tasks[location].userId = "";
+            this.setState({ Task: tasks }, () => {
+              this.refreshTasks();
+              this.editStatusUserId(reference.props.taskID, "todo", ""); //FIX THISSSS
+            });
+            console.log("complete to todo");
+
+            //change status of the task to complete and set userId to null
+          } else {
+            let tasks = this.state.project.Task;
+            tasks[location].userId = this.timelineReferences[
+              timelineKeys[i]
+            ].current.props.memberID;
+            tasks[location].status = "inProgress";
+            this.setState({ Task: tasks }, () => {
+              this.refreshTasks();
+              this.editStatusUserId(
+                reference.props.taskID,
+                "inProgress",
+                this.timelineReferences[timelineKeys[i]].current.props.memberID
+              );
+            });
+            console.log("complete to member");
+
+            //set a new userId for the task to the proper memberId and change the status
+          }
+        }
+        //moving from member timelines (already have checked all possibilities of it coming from todo or completed, so it must have an assignee at this point)
+        else if (
           reference.props.assignee ===
           this.timelineReferences[timelineKeys[i]].current.props.memberID
         ) {
-          break;
-        } else {
-          for (let j = 0; j < tasks.length; j++) {
-            //otherwise change the attributes of the draggable task
-            //if its currently todo, then assign userid and put to inProgress
-            //if its currently inProgress and moved to todo, then set userId to null and change to todo
-            //if its in progress and moves to completed then just change the status
-            if (tasks[j].taskId === reference.props.taskID) {
-              tasks[j].userId = this.timelineReferences[
-                timelineKeys[i]
-              ].current.props.memberID;
-              break;
-            }
-          }
-
-          this.setState({ Task: tasks }, () => {
-            this.refreshTasks();
-          });
+          this.refreshTasks();
+          console.log("member to self");
         }
-        break;
+        //moving from a timeline to anywhere else
+        else {
+          if (timelineKeys[i] === "todoTimeline") {
+            let tasks = this.state.project.Task;
+            tasks[location].status = "todo";
+            tasks[location].userId = "";
+            this.setState({ Task: tasks }, () => {
+              this.refreshTasks();
+              this.editStatusUserId(reference.props.taskID, "todo", ""); //FIX THISSSS
+            });
+            console.log("member to todo");
+
+            //set userId to null and change status
+          } else if (timelineKeys[i] === "completedTimeline") {
+            let tasks = this.state.project.Task;
+            tasks[location].status = "completed";
+            this.setState({ Task: tasks }, () => {
+              this.refreshTasks();
+              this.completeTask(reference.props.taskID); //FIX THISSSS
+            });
+            console.log("member to completed");
+
+            //change status and nothing else
+          } else {
+            console.log("member to other member");
+            let tasks = this.state.project.Task;
+            tasks[location].userId = this.timelineReferences[
+              timelineKeys[i]
+            ].current.props.memberID;
+            this.setState({ Task: tasks }, () => {
+              this.refreshTasks();
+              this.assignTask(
+                this.timelineReferences[timelineKeys[i]].current.props.memberID,
+                reference.props.taskID
+              );
+            });
+            //find the task and set its new userId
+          }
+        }
       }
     }
+  };
+
+  findTask = (reference) => {
+   
+    
+
+    for (let i = 0; i < this.state.project.Task.length; i++) {
+      if (reference.props.taskID === this.state.project.Task[i].taskId) {
+        console.log("found a match")
+        return i;
+      }
+    }
+    console.log("got set to null")
+    return null;
   };
 
   getProjectDetails = (callback) => {
@@ -496,7 +630,7 @@ class AppPage extends Component {
     );
   }
 
-  assignTask(userId) {
+  assignTask(userId, taskId) {
     const projectId = this.state.project.projectId;
     let startTime = Math.round(new Date().getTime() / 1000);
     axios
@@ -504,6 +638,7 @@ class AppPage extends Component {
         projectId: projectId,
         userId: userId,
         startTime: startTime,
+        taskId: taskId,
       })
       .then(
         (res) => {
@@ -516,6 +651,28 @@ class AppPage extends Component {
         }
       );
   }
+
+  editStatusUserId(taskId, status, userId) {
+    const projectId = this.state.project.projectId;
+    axios
+      .post(`${baseUrl}/api/tasks/assign`, {
+        projectId: projectId,
+        userId: userId,
+        taskId: taskId,
+        status: status,
+      })
+      .then(
+        (res) => {
+          this.setState({
+            project: res.data,
+          });
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+  }
+
   editTask(taskId, title, duration, durationType, description) {
     const projectId = this.state.project.projectId;
     if (durationType === 0) {
@@ -542,12 +699,12 @@ class AppPage extends Component {
         }
       );
   }
-  compeleteTask(userId) {
+  completeTask(taskId) {
     const projectId = this.state.project.projectId;
     axios
       .post(`${baseUrl}/api/tasks/complete`, {
         projectId: projectId,
-        userId: userId,
+        taskId: taskId,
       })
       .then(
         (res) => {

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
-import styles from "../../styles/Completed.module.css";
+import styles from "../../styles/Garbage.module.css";
 import Task from "./Task";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -16,7 +16,7 @@ export default class Garbage extends Component {
 
   render() {
     return (
-      <div ref={this.childRef}>   
+      <div className={styles.container} ref={this.childRef}>   
           <FontAwesomeIcon width={18} icon={faPlus} className="mr-2" />   
       </div>
     );
