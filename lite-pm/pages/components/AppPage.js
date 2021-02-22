@@ -429,7 +429,6 @@ class AppPage extends Component {
       apiBaseUrl: baseUrl,
       projectId: this.state?.project?.projectId,
     };
-    console.log(this.state.project);
     return (
       <Layout>
         <div>

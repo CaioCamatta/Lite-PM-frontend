@@ -95,14 +95,11 @@ export default class Timeline extends Component {
   };
 
   onMouseDown = (e) => {
-    console.log("Down");
-    console.log(e.clientX);
     e.preventDefault();
     this.setState({ isScrolling: true, clientX: e.clientX });
   };
 
   onMouseUp = () => {
-    console.log("Up");
     this.setState({ isScrolling: false });
   };
 
@@ -114,8 +111,6 @@ export default class Timeline extends Component {
   throttledMouseMove = (e) => {
     const { clientX, scrollX } = this.state;
     if (this.state.isScrolling) {
-      console.log("Move");
-      console.log(scrollX + e.clientX - clientX);
       this.setState({
         scrollX: scrollX + e.clientX - clientX,
         clientX: e.clientX,
