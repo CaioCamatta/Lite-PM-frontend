@@ -461,7 +461,7 @@ class AppPage extends Component {
             </div>
             <Button
               color="secondary mt-2"
-              className={styles.add}
+              className={`btn-brand1 ${styles.add}`}
               onClick={this.toggleAddMemberModal}
             >
               <FontAwesomeIcon icon={faPlus} width={18} className="mr-2" />

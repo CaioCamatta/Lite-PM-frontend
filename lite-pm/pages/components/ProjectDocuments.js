@@ -161,7 +161,7 @@ export default class ProjectDocuments extends Component {
         <div className="w-100 d-flex">
           <Button
             onClick={this.toggleCreateDocumentModal}
-            className="mx-auto px-3 rounded-xl shadow-sm"
+            className="mx-auto px-3 rounded-xl shadow-sm btn-brand1"
           >
             <FontAwesomeIcon icon={faPlus} className="mr-2" width={18} />
             Add Document

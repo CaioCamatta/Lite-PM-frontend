@@ -150,7 +150,7 @@ export default class Timeline extends Component {
           <Button
             key={uuid()}
             color="secondary"
-            className={styles.addTask}
+            className={`${styles.addTask} btn-brand1`}
             onClick={this.props.addTaskModal}
             assignee={-1}
           >
