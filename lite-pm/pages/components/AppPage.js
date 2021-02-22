@@ -68,7 +68,7 @@ class AppPage extends Component {
         projectId: testcase[1],
       },
       () => {
-        this.getProjectDetails();
+        this.getProjectDetails(this.addTasksToMemberObjects);
       }
     );
   }
@@ -406,7 +406,7 @@ class AppPage extends Component {
     }
   };
 
-  getProjectDetails = () => {
+  getProjectDetails = (callback) => {
     return axios
       .get(`${baseUrl}/api/project/get/${this.state.projectId}`, {})
       .then(
@@ -415,7 +415,11 @@ class AppPage extends Component {
             {
               project: res.data,
             },
-            this.addTasksToMemberObjects
+            () => {
+              if (callback && typeof callback === "function") {
+                callback();
+              }
+            }
           );
         },
         (err) => {
