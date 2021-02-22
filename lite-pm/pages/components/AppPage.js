@@ -432,6 +432,7 @@ class AppPage extends Component {
     const commonProps = {
       apiBaseUrl: baseUrl,
       projectId: this.state?.project?.projectId,
+      getProjectDetails: this.getProjectDetails,
     };
     return (
       <Layout>
@@ -442,6 +443,7 @@ class AppPage extends Component {
               description={this.state.project.Description}
               duration={this.state.project.Duration}
               projectLink={this.state.project.projectId}
+              {...commonProps}
             />
             <h2 className={styles.h2}>The Team</h2>
             <div className="d-flex">
@@ -477,7 +479,7 @@ class AppPage extends Component {
             ></Timeline>
 
             <ProjectDocuments
-              documents={this.state.project.documents}
+              documents={this.state.project.Document}
               className="mt-5"
               {...commonProps}
             />

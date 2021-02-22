@@ -39,7 +39,10 @@ export function ProjectDoc(props) {
       <Button
         className="ml-auto my-auto py-2 px-3"
         color="light"
-        onClick={() => props.deleteDocument(props.documentId)}
+        onClick={() => {
+          if (window.confirm("Are you sure you want to delete this Document?"))
+            props.deleteDocument(props.documentId);
+        }}
       >
         <FontAwesomeIcon icon={faTrash} className="small text-muted" />
       </Button>
@@ -64,8 +67,7 @@ export default class ProjectDocuments extends Component {
       })
       .then(
         (response) => {
-          this.toggleCreateDocumentModal();
-          console.log(response);
+          this.props.getProjectDetails();
         },
         (error) => {
           console.log(error);
@@ -82,7 +84,8 @@ export default class ProjectDocuments extends Component {
       })
       .then(
         (response) => {
-          console.log(response);
+          this.toggleCreateDocumentModal();
+          this.props.getProjectDetails();
         },
         (error) => {
           console.log(error);
