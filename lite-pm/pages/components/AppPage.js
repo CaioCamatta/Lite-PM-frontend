@@ -52,6 +52,7 @@ class AppPage extends Component {
       taskDurationType: 0, //0 for hours, 1 for days
 
       todoTasks: [],
+      completedTasks: [],
     };
 
     this.addTeamMember = this.addTeamMember.bind(this);
@@ -474,6 +475,7 @@ class AppPage extends Component {
               addTaskReference={this.addTaskReference}
               todoTasks={this.state.todoTasks}
               addTaskModal={this.toggleAddTaskModal}
+              completedTasks={this.state.completedTasks}
             ></Timeline>
 
             <ProjectDocuments

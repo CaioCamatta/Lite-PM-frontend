@@ -1,31 +1,10 @@
-.todoContainer {
-    display: flex;
-    align-items: center;
-    border-width: 2px;
-    border-style: solid;
-    border-color: #c0b9b9;
-    border-radius: 15pt;
-    flex-wrap: wrap;
-    margin-bottom: 10pt;
-}
-
-.addTask {
-    border-width: 2px;
-    border-style: solid;
-    border-color: #c0b9b9;
-    border-radius: 15pt;
-    background-color: #625d5d;
-    width: 120pt;
-    float: left;
-    margin-top: 2.5pt;
-    margin-right: 2pt;
-    margin-left: 5pt;
-    margin-bottom: 2.5pt;
-    height: 28pt;
-    text-align: center;
-    
-}
 
 .timeTicks{
     border-left: 128px solid transparent;
+}
+
+.completedHeader{
+    margin-bottom: 3pt;
+    font-size: 15pt;
+    font-weight: 500;
 }

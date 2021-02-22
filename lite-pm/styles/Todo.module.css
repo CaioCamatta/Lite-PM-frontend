@@ -1,0 +1,27 @@
+.addTask {
+    border-width: 2px;
+    border-style: solid;
+    border-color: #c0b9b9;
+    border-radius: 15pt;
+    background-color: #625d5d;
+    width: 120pt;
+    float: left;
+    margin-top: 2.5pt;
+    margin-right: 2pt;
+    margin-left: 5pt;
+    margin-bottom: 2.5pt;
+    height: 28pt;
+    text-align: center;
+    
+}
+.todoContainer {
+    display: flex;
+    align-items: center;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #c0b9b9;
+    border-radius: 15pt;
+    flex-wrap: wrap;
+    margin-bottom: 10pt;
+}
+
