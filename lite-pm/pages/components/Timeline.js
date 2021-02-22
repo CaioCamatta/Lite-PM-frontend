@@ -31,7 +31,7 @@ export default class Timeline extends Component {
     );
     this.state = {
       memberTimelines: this.props.timelines,
-      timelineScope: "hour",
+      timelineScope: "day",
       isScrolling: false,
       clientX: 0,
       scrollX: 0,
@@ -166,9 +166,9 @@ export default class Timeline extends Component {
       ((Date.now() - leftTimestamp) * 100) / (rightTimestamp - leftTimestamp);
 
     return (
-      <div>
+      <div className="overflow-hidden">
         <div className={styles.todoContainer} ref={this.todoRef}>
-          {this.props?.todoTasks?.map((task) => {
+          {this.props?.todoTasks?.map((task, index) => {
             let taskRef = React.createRef();
             this.props.addTaskReference(task.taskId, taskRef);
 
@@ -176,7 +176,7 @@ export default class Timeline extends Component {
               <Task
                 taskID={task.taskId}
                 handleStop={this.props.handleStop}
-                key={task.key}
+                key={index}
                 name={task.title}
                 description={task.description}
                 duration={task.description}
@@ -211,23 +211,23 @@ export default class Timeline extends Component {
           <span
             className="d-inline-block position-absolute"
             style={{
-              height: 19 + 5 + 50.7 * this.props.timelines?.length,
+              height: 19 + 5 + 50.7 * this.props.project.Member.length,
               width: 2,
               background: "#749ffff0",
               left: `${currentRelativeTime}%`,
             }}
           ></span>
-          {timeTicks.map((tick) => {
-            return <span>{tick}</span>;
+          {timeTicks.map((tick, index) => {
+            return <span key={index}>{tick}</span>;
           })}
         </div>
         <div>
-          {this.props.project?.Member?.map((member) => {
+          {this.props.project?.Member?.map((member, index) => {
             let timelineRef = React.createRef();
             this.props.addTimelineReference(member.userId, timelineRef);
             return (
               <MemberTimeline
-                key={uuid()}
+                key={index}
                 memberID={member.userId}
                 name={member.name}
                 ref={timelineRef}
@@ -244,8 +244,9 @@ export default class Timeline extends Component {
                       key={task.key}
                       name={task.title}
                       description={task.description}
-                      duration={task.description}
+                      duration={task.duration}
                       durationType={task.durationType}
+                      startDate={task.startDate}
                       ref={taskRef}
                       assignee={task.userId}
                     ></Task>

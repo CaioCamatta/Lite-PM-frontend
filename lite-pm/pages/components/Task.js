@@ -44,18 +44,18 @@ export default class Task extends Component {
             disabled={true}
             dataindex={this.props.taskID}
           >
-            <div className={styles.contents}>{this.state.name}</div>
+            <div className={styles.contents}>{this.props.name}</div>
           </Button>
           <Modal
             isOpen={this.state.displayTask}
             toggle={this.toggleDisplayTask}
           >
-            <ModalHeader>{this.state.name}</ModalHeader>
+            <ModalHeader>{this.props.name}</ModalHeader>
             <ModalBody className="text-center">
-              {this.state.description}
+              {this.props.description}
               <div className="d-flex">
-                Duration: {this.state.duration}
-                {this.state.durationType === 0 ? (
+                Duration: {this.props.duration}
+                {this.props.durationType === 0 ? (
                   <div className="ml-1">Hours</div>
                 ) : (
                   <div>Days</div>
