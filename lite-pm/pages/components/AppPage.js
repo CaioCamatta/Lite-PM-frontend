@@ -23,7 +23,7 @@ import { faPlus, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import uuid from "react-uuid";
 
-const baseUrl = `http://18.218.177.154:5000`;
+const baseUrl = `https://litepm.redirectme.net:5000`;
 
 class AppPage extends Component {
   constructor(props) {
@@ -137,7 +137,7 @@ class AppPage extends Component {
   renderAddTaskModal = () => {
     return (
       <Modal isOpen={this.state.showAddTask} toggle={this.toggleAddTaskModal}>
-        <ModalHeader>Add a Task</ModalHeader>
+        <ModalHeader className="modal-header border-0">Add a Task</ModalHeader>
         <ModalBody className="text-center">
           <div className="float-left">
             <label>
@@ -193,11 +193,11 @@ class AppPage extends Component {
             </div>
           </div>
         </ModalBody>
-        <ModalFooter>
-          <Button color="secondary" onClick={this.toggleAddTaskModal}>
-            cancel
+        <ModalFooter className="modal-footer border-0">
+          <Button color="outline secondary" onClick={this.toggleAddTaskModal}>
+            Cancel
           </Button>
-          <Button color="success" onClick={this.addTask}>
+          <Button color="secondary" onClick={this.addTask}>
             Add Task
           </Button>
         </ModalFooter>
@@ -290,53 +290,57 @@ class AppPage extends Component {
         isOpen={this.state.showAddMember}
         toggle={this.toggleAddMemberModal}
       >
-        <ModalHeader>Add a Team Member</ModalHeader>
-        <ModalBody className="text-center">
+        <ModalHeader className="modal-header border-0">Add a Team Member</ModalHeader>
+        <ModalBody className="text-left">
           <label>
+            Name
             <input
               className={styles.inputs}
               name="memberName"
               type="text"
-              placeholder="Name"
+              placeholder="John Doe"
               onChange={this.handleChange}
             />
           </label>
           <br />
           <label>
+            Email
             <input
               className={styles.inputs}
               name="memberEmail"
               type="text"
-              placeholder="Email"
+              placeholder="JohnDoes@email.com"
               onChange={this.handleChange}
             />
           </label>
           <br />
           <label>
+            Github Link
             <input
               className={styles.inputs}
               name="memberGit"
               type="text"
-              placeholder="Github Link"
+              placeholder="github.com/johndoe"
               onChange={this.handleChange}
             />
           </label>
           <br />
           <label>
+            Phone Number
             <input
               className={styles.inputs}
               name="memberPhone"
               type="text"
-              placeholder="Phone"
+              placeholder="999-666-3333"
               onChange={this.handleChange}
             />
           </label>
         </ModalBody>
-        <ModalFooter>
-          <Button color="secondary" onClick={this.toggleAddMemberModal}>
+        <ModalFooter className="modal-footer border-0">
+          <Button color="outline secondary" onClick={this.toggleAddMemberModal}>
             cancel
           </Button>
-          <Button color="success" onClick={this.addTeamMember}>
+          <Button color="secondary" onClick={this.addTeamMember}>
             Add Member
           </Button>
         </ModalFooter>
@@ -536,6 +540,26 @@ class AppPage extends Component {
         duration: duration,
         title: title,
         description: description,
+      })
+      .then(
+        (res) => {
+          this.setState({
+            project: res.data,
+          });
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+  }
+  setStatusToDO(taskId){
+    const projectId = this.state.project.projectId;
+    axios
+      .post(`${baseUrl}/api/tasks/assign`, {
+        projectId: projectId,
+        userId: "",
+        taskId: taskId,
+        status: "todo"
       })
       .then(
         (res) => {
