@@ -137,7 +137,7 @@ class AppPage extends Component {
   renderAddTaskModal = () => {
     return (
       <Modal isOpen={this.state.showAddTask} toggle={this.toggleAddTaskModal}>
-        <ModalHeader>Add a Task</ModalHeader>
+        <ModalHeader className="modal-header border-0">Add a Task</ModalHeader>
         <ModalBody className="text-center">
           <div className="float-left">
             <label>
@@ -193,11 +193,11 @@ class AppPage extends Component {
             </div>
           </div>
         </ModalBody>
-        <ModalFooter>
-          <Button color="secondary" onClick={this.toggleAddTaskModal}>
-            cancel
+        <ModalFooter className="modal-footer border-0">
+          <Button color="outline secondary" onClick={this.toggleAddTaskModal}>
+            Cancel
           </Button>
-          <Button color="success" onClick={this.addTask}>
+          <Button color="secondary" onClick={this.addTask}>
             Add Task
           </Button>
         </ModalFooter>

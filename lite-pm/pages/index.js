@@ -88,10 +88,10 @@ export default class HomePage extends Component {
           Create a new project!
         </ModalHeader>
         <ModalBody className="text-left fontweight">
-          <label className = "fontweight">
+          <label className="fontweight">
             Project Name
             <br />
-            <input 
+            <input
               className={styles.inputs}
               name="projectName"
               type="text"
@@ -100,7 +100,7 @@ export default class HomePage extends Component {
             />
           </label>
           <br />
-          <label className= "fontweight">
+          <label className="fontweight">
             Project Description
             <br />
             <input
@@ -112,7 +112,7 @@ export default class HomePage extends Component {
             />
           </label>
           <br />
-          <label className= "fontweight">
+          <label className="fontweight">
             Duration
             <br />
             <input
@@ -122,10 +122,7 @@ export default class HomePage extends Component {
               placeholder="0"
               onChange={this.handleChange}
             />
-            <label className="ml-2 text-muted">
-              days
-            </label>
-            
+            <label className="ml-2 text-muted">days</label>
           </label>
         </ModalBody>
         <ModalFooter className="modal-footer border-0">
