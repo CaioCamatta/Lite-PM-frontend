@@ -20,7 +20,7 @@ import React, { Component } from "react";
 import Router from "next/router";
 import axios from "axios";
 
-const baseUrl = "http://18.218.177.154:5000";
+const baseUrl = "https://litepm.redirectme.net:5000";
 
 export default class HomePage extends Component {
   constructor(props) {

@@ -23,7 +23,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import uuid from "react-uuid";
 
-const baseUrl = `http://18.218.177.154:5000`;
+const baseUrl = `https://litepm.redirectme.net:5000`;
 
 class AppPage extends Component {
   constructor(props) {
@@ -53,12 +53,19 @@ class AppPage extends Component {
 
       todoTasks: [],
       completedTasks: [],
+
+      timelineScope: "hours",
     };
 
     this.addTeamMember = this.addTeamMember.bind(this);
     this.toggleAddMemberModal = this.toggleAddMemberModal.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.renderCreateMemberModal = this.renderCreateMemberModal.bind(this);
+
+    this.offset = 0
+    this.leftTimestamp = 0
+    this.rightTimestamp = 0
+    this.timeTicks = 0
   }
 
   componentDidMount() {
@@ -76,6 +83,8 @@ class AppPage extends Component {
 
   refreshTasks = () => {
     //reset the member task lists
+
+    console.log("here")
     let wiper = this.state.project.Member;
     for (let i = 0; i < wiper.length; i++) {
       wiper[i].taskList = [];
@@ -230,8 +239,8 @@ class AppPage extends Component {
           },
           () => {
             this.refreshTasks();
-            this.getProjectDetails();
-
+            this.getProjectDetails(this.refreshTasks);
+            
           }
         );
       });
@@ -357,9 +366,7 @@ class AppPage extends Component {
 
     //reference.props.assignee
     //reference.props.status
-    console.log("The draggable taskId is:",reference.props.taskID)
     
-
     //this.timelineReferences[timelineKeys[i]].current.childRef.current
     //this.timelineReferences[timelineKeys[i]].current.props.memberID
 
@@ -428,13 +435,19 @@ class AppPage extends Component {
             tasks[location].userId = this.timelineReferences[
               timelineKeys[i]
             ].current.props.memberID;
+            let timestamps = this.positionInTimeline(reference, this.timelineReferences[timelineKeys[i]], location)
+            tasks[location].startTime = timestamps[0]
             tasks[location].status = "inProgress";
             this.setState({ Task: tasks }, () => {
               this.refreshTasks();
               this.assignTask(
                 this.timelineReferences[timelineKeys[i]].current.props.memberID,
-                reference.props.taskID
+                reference.props.taskID,
+                timestamps[0]
               );
+              console.log(this.state.project.Member)
+              
+              
             });
             console.log("todo to member");
 
@@ -527,17 +540,52 @@ class AppPage extends Component {
     }
   };
 
-  findTask = (reference) => {
-   
-    
+  positionInTimeline = (draggable, timeline, location) =>{
+    //compare x coordinate of draggable with start x and end x of member timeline
+    //get relative percent of x that draggable is in timeline
+    //use relative x to set the starttime timestamp and to set the endtime timestamp
+    //make api call to update this in backend
+    console.log(draggable.childRef.current.getBoundingClientRect().x)
 
+    let draggableStartX = draggable.childRef.current.getBoundingClientRect().x
+    let draggableEndX = draggable.childRef.current.getBoundingClientRect().x + draggable.childRef.current.getBoundingClientRect().width
+
+    let offset = 0;
+    let relativePosition = 0;
+    //determine where x is relative to the timeline - find percentage that it is across the timeline
+    if(draggableStartX <= timeline.current.childRef.current.getBoundingClientRect().x){
+      offset = 0
+    }
+    else if( draggableEndX >= timeline.current.childRef.current.getBoundingClientRect().x + timeline.current.childRef.current.getBoundingClientRect().width){
+      offset = 1
+    }
+    else{
+      let size = timeline.current.childRef.current.getBoundingClientRect().width
+      relativePosition = draggableStartX - timeline.current.childRef.current.getBoundingClientRect().x 
+      offset = relativePosition/size
+    }
+    let newLeftStamp = ((this.rightTimestamp - this.leftTimestamp) * offset) + this.leftTimestamp
+    let duration = this.state.project.Task[location].duration
+    let newRightStamp = ((this.rightTimestamp - this.leftTimestamp) * offset) + this.leftTimestamp +  duration
+
+    return [newLeftStamp, newRightStamp]
+
+    //got the left and right timestamp for the task, just need to make the call and put this function everywhere that it needs to be in handlestop method
+  }
+
+  updateParentTimelineData = (offset, timeTicks, leftTimestamp, rightTimestamp) =>{
+    this.offset = offset
+    this.leftTimestamp = leftTimestamp
+    this.rightTimestamp = rightTimestamp
+    this.timeTicks = timeTicks
+  }
+
+  findTask = (reference) => {
     for (let i = 0; i < this.state.project.Task.length; i++) {
       if (reference.props.taskID === this.state.project.Task[i].taskId) {
-        console.log("found a match")
         return i;
       }
     }
-    console.log("got set to null")
     return null;
   };
 
@@ -612,6 +660,7 @@ class AppPage extends Component {
               todoTasks={this.state.todoTasks}
               addTaskModal={this.toggleAddTaskModal}
               completedTasks={this.state.completedTasks}
+              updateParentTimelineData={this.updateParentTimelineData}
             ></Timeline>
 
             <ProjectDocuments
@@ -630,9 +679,8 @@ class AppPage extends Component {
     );
   }
 
-  assignTask(userId, taskId) {
+  assignTask(userId, taskId, startTime) {
     const projectId = this.state.project.projectId;
-    let startTime = Math.round(new Date().getTime() / 1000);
     axios
       .post(`${baseUrl}/api/tasks/assign`, {
         projectId: projectId,
@@ -665,7 +713,7 @@ class AppPage extends Component {
         (res) => {
           this.setState({
             project: res.data,
-          });
+          }, ()=>{this.refreshTasks()});
         },
         (err) => {
           console.log(err);

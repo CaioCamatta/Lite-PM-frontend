@@ -19,7 +19,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import uuid from "react-uuid";
 import axios from "axios";
-const baseUrl = `http://18.218.177.154:5000`;
+const baseUrl = `https://litepm.redirectme.net:5000`;
 
 export default class Timeline extends Component {
   //create nice boxes, all must be same size - on click open up display modal for task showing all details
@@ -128,7 +128,8 @@ export default class Timeline extends Component {
   render() {
     const [timeTicks, leftTimestamp, rightTimestamp] = this.calculateTimeTicks(
       this.state.offset
-    );
+    )
+    this.props.updateParentTimelineData(this.state.offset, timeTicks, leftTimestamp, rightTimestamp);
     const currentRelativeTime =
       ((Date.now() - leftTimestamp) * 100) / (rightTimestamp - leftTimestamp);
     this.props.addTimelineReference("todoTimeline", this.todoRef)
@@ -183,6 +184,7 @@ export default class Timeline extends Component {
           {this.props.project?.Member?.map((member, index) => {
             let timelineRef = React.createRef();
             this.props.addTimelineReference(member.userId, timelineRef);
+            console.log(member.taskList)
             return (
               <MemberTimeline
                 key={index}
@@ -205,7 +207,7 @@ export default class Timeline extends Component {
                       description={task.description}
                       duration={task.duration}
                       durationType={task.durationType}
-                      startDate={task.startDate}
+                      startTime={task.startTime}
                       ref={taskRef}
                       assignee={task.userId}
                     ></Task>

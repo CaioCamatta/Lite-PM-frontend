@@ -13,9 +13,9 @@ export default class MemberTimeline extends Component {
   render() {
     const spanTimestamp = this.props.rightTimestamp - this.props.leftTimestamp;
     return (
-      <div className={styles.timelineContainer} ref={this.childRef}>
+      <div className={styles.timelineContainer} ref={this.props.reference}>
         <div className={styles.name}>{this.props.name}</div>
-        <div className={styles.timeline} ref={this.props.reference}>
+        <div className={styles.timeline} ref={this.childRef}>
           <div
             className="position-relative rounded-xl"
             style={{ height: 35 }}
@@ -24,14 +24,14 @@ export default class MemberTimeline extends Component {
               task = task.props;
               return (
                 <Task
-                  name={new Date(parseInt(task.startDate) * 1000).getHours()}
+                  name={new Date(parseInt(task.startTime) * 1000).getHours()}
                   key={index}
                   description={task.description}
                   duration={task.duration}
                   durationType={this.props.taskDurationType}
                   className="position-absolute mt-0"
                   left={`${
-                    ((parseInt(task.startDate) * 1000 -
+                    ((parseInt(task.startTime) * 1000 -
                       this.props.leftTimestamp) *
                       100) /
                     spanTimestamp
