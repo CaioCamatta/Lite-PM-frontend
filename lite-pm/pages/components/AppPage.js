@@ -23,7 +23,7 @@ import { faPlus, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import uuid from "react-uuid";
 
-const baseUrl = `https://litepm.redirectme.net:5000`;
+const baseUrl = `https://litepm.redirectme.net`;
 
 class AppPage extends Component {
   constructor(props) {
