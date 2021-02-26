@@ -16,7 +16,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import uuid from "react-uuid";
 import axios from "axios";
-const baseUrl = `https://litepm.redirectme.net:5000`;
+const baseUrl = `https://litepm.redirectme.net`;
 
 export default class Timeline extends Component {
   //create nice boxes, all must be same size - on click open up display modal for task showing all details
