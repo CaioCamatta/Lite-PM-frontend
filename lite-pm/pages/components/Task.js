@@ -39,7 +39,7 @@ export default class Task extends Component {
           style={{ left: this.props.left, width: this.props.width }}
         >
           <Button
-            className={`w-100 ${styles.box}`}
+            className={`w-100 px-0 ${styles.box}`}
             onClick={this.toggleDisplayTask}
             disabled={true}
             dataindex={this.props.taskID}

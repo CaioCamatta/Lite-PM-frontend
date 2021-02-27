@@ -21,17 +21,23 @@ export default class MemberTimeline extends Component {
             style={{ height: 35 }}
           >
             {this.props.tasks?.map((task, index) => {
-              task = task.props;
+              let taskRef = React.createRef();
+              this.props.addTaskReference(task.taskId, taskRef);
               return (
                 <Task
-                  name={new Date(parseInt(task.startTime) * 1000).getHours()}
+                  handleStop={this.props.handleStop}
+                  name={task.title}
+                  taskID={task.taskId}
                   key={index}
                   description={task.description}
                   duration={task.duration}
                   durationType={this.props.taskDurationType}
                   className="position-absolute mt-0"
+                  ref={taskRef}
+                  assignee={task.userId}
+                  status={task.status}
                   left={`${
-                    ((parseInt(task.startTime) * 1000 -
+                    ((parseInt(task.startTime) -
                       this.props.leftTimestamp) *
                       100) /
                     spanTimestamp
@@ -48,3 +54,16 @@ export default class MemberTimeline extends Component {
     );
   }
 }
+{/* <Task
+                      taskID={task.taskId}
+                      handleStop={this.props.handleStop}
+                      key={task.key}
+                      name={task.title}
+                      status={task.status}
+                      description={task.description}
+                      duration={task.duration}
+                      durationType={task.durationType}
+                      startTime={task.startTime}
+                      ref={taskRef}
+                      assignee={task.userId}
+                    ></Task> */}
