@@ -43,3 +43,9 @@
   border-radius: 5px;
   border: 1px solid grey;
 }
+.fontweight{
+  font-weight: 400;
+}
+.titlfontweight{
+  font-weight: 500;
+}

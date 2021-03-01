@@ -148,20 +148,20 @@ export default class ProjectDocuments extends Component {
   render() {
     return (
       <div className={this.props.className}>
-        <h3 className="mb-3">Documents</h3>
+        <h4 className="mb-4">Documents</h4>
         {this.props.documents?.map((document, i) => (
           <ProjectDoc
             key={i}
             title={document.title}
-            url={document.url}
+            url={document.link}
             documentId={document.documentId}
             deleteDocument={this.deleteDocument}
           />
         ))}
-        <div className="w-100 d-flex">
+        <div className="w-100 pt-2 d-flex">
           <Button
             onClick={this.toggleCreateDocumentModal}
-            className="mx-auto px-3 rounded-xl shadow-sm"
+            className="mx-auto px-3 rounded-xl shadow-sm btn-brand1"
           >
             <FontAwesomeIcon icon={faPlus} className="mr-2" width={18} />
             Add Document

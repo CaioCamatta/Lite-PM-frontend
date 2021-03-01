@@ -30,3 +30,18 @@ a {
 .text-110 {
   font-size: 110%;
 }
+
+.btn-brand1 {
+  background-color: #5593b9;
+  border-color: #5593b9;
+}
+
+.btn-brand1:hover {
+  background-color: #6BA4C7;
+  border-color: #6BA4C7;
+}
+
+.btn-brand1:active {
+  background-color: #6BA4C7;
+  border-color: #6BA4C7;
+}

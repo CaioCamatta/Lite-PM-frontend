@@ -3,7 +3,7 @@
   border-style: solid;
   border-color: rgb(192, 185, 185);
   border-radius: 15pt;
-  min-width: 90pt;
+  min-width: 105pt;
   float: left;
   margin-right: 6pt;
   margin-left: 8pt;
@@ -13,7 +13,7 @@
   margin-left: 8pt;
   font-weight: 500;
   font-size: 14pt;
-  max-width: 93px;
+  max-width: 120px;
   overflow: hidden;
 }
 
@@ -21,6 +21,6 @@
   margin-left: 8pt;
   font-size: 10pt;
   font-weight: 300;
-  max-width: 110px;
+  max-width: 130px;
   overflow: hidden;
 }

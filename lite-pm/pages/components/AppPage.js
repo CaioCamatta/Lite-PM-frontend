@@ -19,7 +19,7 @@ import MemberTimeline from "./MemberTimeline";
 import ProjectDocuments from "./ProjectDocuments";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import uuid from "react-uuid";
 
@@ -134,7 +134,7 @@ class AppPage extends Component {
   renderAddTaskModal = () => {
     return (
       <Modal isOpen={this.state.showAddTask} toggle={this.toggleAddTaskModal}>
-        <ModalHeader>Add a Task</ModalHeader>
+        <ModalHeader className="modal-header border-0">Add a Task</ModalHeader>
         <ModalBody className="text-center">
           <div className="float-left">
             <label>
@@ -190,9 +190,9 @@ class AppPage extends Component {
             </div>
           </div>
         </ModalBody>
-        <ModalFooter>
-          <Button color="secondary" onClick={this.toggleAddTaskModal}>
-            cancel
+        <ModalFooter className="modal-footer border-0">
+          <Button color="outline secondary" onClick={this.toggleAddTaskModal}>
+            Cancel
           </Button>
           <Button
             color="success"
@@ -298,53 +298,57 @@ class AppPage extends Component {
         isOpen={this.state.showAddMember}
         toggle={this.toggleAddMemberModal}
       >
-        <ModalHeader>Add a Team Member</ModalHeader>
-        <ModalBody className="text-center">
+        <ModalHeader className="modal-header border-0">Add a Team Member</ModalHeader>
+        <ModalBody className="text-left">
           <label>
+            Name
             <input
               className={styles.inputs}
               name="memberName"
               type="text"
-              placeholder="Name"
+              placeholder="John Doe"
               onChange={this.handleChange}
             />
           </label>
           <br />
           <label>
+            Email
             <input
               className={styles.inputs}
               name="memberEmail"
               type="text"
-              placeholder="Email"
+              placeholder="JohnDoes@email.com"
               onChange={this.handleChange}
             />
           </label>
           <br />
           <label>
+            Github Link
             <input
               className={styles.inputs}
               name="memberGit"
               type="text"
-              placeholder="Github Link"
+              placeholder="github.com/johndoe"
               onChange={this.handleChange}
             />
           </label>
           <br />
           <label>
+            Phone Number
             <input
               className={styles.inputs}
               name="memberPhone"
               type="text"
-              placeholder="Phone"
+              placeholder="999-666-3333"
               onChange={this.handleChange}
             />
           </label>
         </ModalBody>
-        <ModalFooter>
-          <Button color="secondary" onClick={this.toggleAddMemberModal}>
+        <ModalFooter className="modal-footer border-0">
+          <Button color="outline secondary" onClick={this.toggleAddMemberModal}>
             cancel
           </Button>
-          <Button color="success" onClick={this.addTeamMember}>
+          <Button color="secondary" onClick={this.addTeamMember}>
             Add Member
           </Button>
         </ModalFooter>
@@ -694,7 +698,7 @@ class AppPage extends Component {
     };
     return (
       <Layout>
-        <div>
+        <div style={{ minHeight: "90vh", marginBottom: 70 }}>
           <Container className="mt-5 mb-5">
             <ProjectDetails
               projname={this.state.project.projectName}
@@ -703,8 +707,8 @@ class AppPage extends Component {
               projectLink={this.state.project.projectId}
               {...commonProps}
             />
-            <h2 className={styles.h2}>The Team</h2>
-            <div className="d-flex">
+            <h2 className={`${styles.h2} mb-4`}>The Team</h2>
+            <div className="d-flex mb-3">
               {this.state.project.Member.map((member, index) => {
                 return (
                   <TeamMember
@@ -719,13 +723,21 @@ class AppPage extends Component {
             </div>
             <Button
               color="secondary mt-2"
-              className={styles.add}
+              className={`btn-brand1 ${styles.add}`}
               onClick={this.toggleAddMemberModal}
             >
               <FontAwesomeIcon icon={faPlus} width={18} className="mr-2" />
               Add Member
             </Button>
             <h2 className={styles.h2}>Tasks and Timeline</h2>
+            <p className="small text-muted mb-4 mt-2">
+              <FontAwesomeIcon
+                icon={faInfoCircle}
+                width={18}
+                className="mr-2"
+              />
+              Drag and drop tasks to assign them. Drag timeline to move it.
+            </p>
             <h2 className={styles.todoHeader}>To-do</h2>
             <Timeline
               project={this.state.project}
@@ -740,7 +752,7 @@ class AppPage extends Component {
 
             <ProjectDocuments
               documents={this.state.project.Document}
-              className="mt-5"
+              className="mt-5 pt-4"
               {...commonProps}
             />
           </Container>

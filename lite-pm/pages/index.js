@@ -84,35 +84,35 @@ export default class HomePage extends Component {
         isOpen={this.state.showAddProject}
         toggle={this.toggleAddProjectModal}
       >
-        <ModalHeader className="modal-header border-0">
+        <ModalHeader className="modal-header border-0 titlefontweight">
           Create a new project!
         </ModalHeader>
-        <ModalBody className="text-left">
-          <label>
-            Project Name!
+        <ModalBody className="text-left fontweight">
+          <label className="fontweight">
+            Project Name
             <br />
             <input
               className={styles.inputs}
               name="projectName"
               type="text"
-              placeholder="Enter Project Name!"
+              placeholder="Enter Project Name"
               onChange={this.handleChange}
             />
           </label>
           <br />
-          <label>
-            Project Description!
+          <label className="fontweight">
+            Project Description
             <br />
             <input
               className={styles.inputs}
               name="projectDescription"
               type="text"
-              placeholder="Enter Project Description!"
+              placeholder="Enter Project Description"
               onChange={this.handleChange}
             />
           </label>
           <br />
-          <label>
+          <label className="fontweight">
             Duration
             <br />
             <input
@@ -122,6 +122,7 @@ export default class HomePage extends Component {
               placeholder="0"
               onChange={this.handleChange}
             />
+            <label className="ml-2 text-muted">days</label>
           </label>
         </ModalBody>
         <ModalFooter className="modal-footer border-0">
@@ -130,7 +131,7 @@ export default class HomePage extends Component {
             color="secondary"
             onClick={this.toggleAddProjectModal}
           >
-            cancel
+            Cancel
           </Button>
           <Button color="secondary" onClick={this.addProject}>
             Create Project
@@ -170,6 +171,7 @@ export default class HomePage extends Component {
                   size="lg"
                   color="secondary mb-4"
                   onClick={this.toggleAddProjectModal}
+                  className="btn-brand1"
                 >
                   Start Project
                 </Button>
@@ -266,6 +268,7 @@ export default class HomePage extends Component {
                 color="secondary mx-auto"
                 size="lg"
                 onClick={this.toggleAddProjectModal}
+                className="btn-brand1"
               >
                 Start Project
               </Button>

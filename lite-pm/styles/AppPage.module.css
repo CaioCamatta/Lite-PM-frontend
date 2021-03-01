@@ -1,12 +1,12 @@
 .h2 {
     font-size: 19pt;
-    margin-top: 75pt;
+    margin-top: 50pt;
 }
 
 .inputs{
-    border: none;
-    border-bottom: 0.5px solid black;
-    width: 300pt;
+    width: 348pt;
+    border-radius: 5px;
+    border: 1px solid grey;
 }
 
 .add { 
