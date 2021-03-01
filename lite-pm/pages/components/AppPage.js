@@ -84,7 +84,6 @@ class AppPage extends Component {
   refreshTasks = () => {
     //reset the member task lists
 
-    console.log("here");
     let wiper = this.state.project.Member;
     for (let i = 0; i < wiper.length; i++) {
       wiper[i].taskList = [];
@@ -95,7 +94,6 @@ class AppPage extends Component {
       let todos = this.state.todoTasks;
       let completed = this.state.completedTasks;
       for (let i = 0; i < this.state.project.Task.length; i++) {
-        console.log(this.state.project.Task[i].status);
         if (this.state.project.Task[i].status === "todo") {
           todos.push(this.state.project.Task[i]);
         } else if (this.state.project.Task[i].status === "completed") {
@@ -115,9 +113,6 @@ class AppPage extends Component {
           Member: members,
           todoTasks: todos,
           completedTasks: completed,
-        },
-        () => {
-          console.log(this.state.todoTasks);
         }
       );
     });
@@ -395,7 +390,7 @@ class AppPage extends Component {
             this.refreshTasks();
             this.deleteTask(reference.props.taskID);
           });
-          console.log("garbage");
+          //console.log("garbage");
         }
         //if the task was already there, do nothing (snap back into place)
         else if (
@@ -403,7 +398,7 @@ class AppPage extends Component {
           timelineKeys[i] === "todoTimeline"
         ) {
           this.refreshTasks();
-          console.log("todo to todo");
+          //console.log("todo to todo");
 
           //snap task back into place and dont change anything (probs call refresh tasks)
         } else if (
@@ -411,7 +406,7 @@ class AppPage extends Component {
           timelineKeys[i] === "completedTimeline"
         ) {
           this.refreshTasks();
-          console.log("complete to complete");
+          //console.log("complete to complete");
 
           //snap task back into place and dont change anything (probs call refresh tasks)
         }
@@ -427,7 +422,7 @@ class AppPage extends Component {
               this.refreshTasks();
               this.completeTask(reference.props.taskID);
             });
-            console.log("todo to complete");
+            //console.log("todo to complete");
 
             //change status of the task to complete and leave userId
           } else {
@@ -443,17 +438,14 @@ class AppPage extends Component {
             tasks[location].startTime = timestamps[0];
             tasks[location].status = "inProgress";
             this.setState({ Task: tasks }, () => {
-              console.log("Start refresh tasks");
               this.refreshTasks();
-              console.log("post to db");
               this.assignTask(
                 this.timelineReferences[timelineKeys[i]].current.props.memberID,
                 reference.props.taskID,
                 timestamps[0]
               );
-              console.log(this.state.project.Member);
             });
-            console.log("todo to member");
+            //console.log("todo to member");
 
             //set a new userId for the task to the proper memberId and change the status
           }
@@ -481,9 +473,8 @@ class AppPage extends Component {
                 tasks[location].startTime
               ); //editTask(taskId, title, duration, durationType, description, userId, status)
             });
-            console.log("complete to todo");
-            console.log(this.state.project.Task);
-
+            //console.log("complete to todo");
+            
             //change status of the task to complete and set userId to null
           } else {
             let tasks = this.state.project.Task;
@@ -505,7 +496,7 @@ class AppPage extends Component {
                 timestamps[0]
               );
             });
-            console.log("complete to member");
+            //console.log("complete to member");
 
             //set a new userId for the task to the proper memberId and change the status
           }
@@ -523,15 +514,13 @@ class AppPage extends Component {
           );
           tasks[location].startTime = timestamps[0];
           this.setState({ Task: tasks }, () => {
-            console.log("Start refresh tasks");
             this.refreshTasks();
-            console.log("post to db");
             this.assignTask(
               this.timelineReferences[timelineKeys[i]].current.props.memberID,
               reference.props.taskID,
               timestamps[0]
             );
-            console.log(this.state.project.Task);
+            //console.log(this.state.project.Task);
           });
           console.log("member to self");
         }
@@ -555,7 +544,7 @@ class AppPage extends Component {
                 tasks[location].startTime
               ); //FIX THISSSS
             });
-            console.log("member to todo");
+            //console.log("member to todo");
 
             //set userId to null and change status
           } else if (timelineKeys[i] === "completedTimeline") {
@@ -565,11 +554,11 @@ class AppPage extends Component {
               this.refreshTasks();
               this.completeTask(reference.props.taskID); //FIX THISSSS
             });
-            console.log("member to completed");
+            //console.log("member to completed");
 
             //change status and nothing else
           } else {
-            console.log("member to other member");
+            //console.log("member to other member");
             let tasks = this.state.project.Task;
             tasks[location].userId = this.timelineReferences[
               timelineKeys[i]
@@ -581,15 +570,12 @@ class AppPage extends Component {
             );
             tasks[location].startTime = timestamps[0];
             this.setState({ Task: tasks }, () => {
-              console.log("Start refresh tasks");
               this.refreshTasks();
-              console.log("post to db");
               this.assignTask(
                 this.timelineReferences[timelineKeys[i]].current.props.memberID,
                 reference.props.taskID,
                 timestamps[0]
               );
-              console.log(this.state.project.Member);
             });
             //find the task and set its new userId
           }
@@ -631,9 +617,7 @@ class AppPage extends Component {
         timeline.current.childRef.current.getBoundingClientRect().x;
       offset = relativePosition / size;
     }
-    console.log(this.rightTimestamp);
-    console.log(this.leftTimestamp);
-
+    
     let newLeftStamp =
       (this.rightTimestamp - this.leftTimestamp) * offset + this.leftTimestamp;
     let duration = this.state.project.Task[location].duration;
@@ -641,7 +625,6 @@ class AppPage extends Component {
       (this.rightTimestamp - this.leftTimestamp) * offset +
       this.leftTimestamp +
       duration;
-    console.log(newLeftStamp);
     return [newLeftStamp, newRightStamp];
 
     //got the left and right timestamp for the task, just need to make the call and put this function everywhere that it needs to be in handlestop method

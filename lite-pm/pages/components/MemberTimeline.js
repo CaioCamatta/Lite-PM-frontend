@@ -54,16 +54,3 @@ export default class MemberTimeline extends Component {
     );
   }
 }
-{/* <Task
-                      taskID={task.taskId}
-                      handleStop={this.props.handleStop}
-                      key={task.key}
-                      name={task.title}
-                      status={task.status}
-                      description={task.description}
-                      duration={task.duration}
-                      durationType={task.durationType}
-                      startTime={task.startTime}
-                      ref={taskRef}
-                      assignee={task.userId}
-                    ></Task> */}
