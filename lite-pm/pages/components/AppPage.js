@@ -363,7 +363,7 @@ class AppPage extends Component {
   handleStop = (event, draggableData) => {
     let draggableY = event.y;
     //get the key  of the draggableData to find in references
-    let index = draggableData.node.children[0].attributes.dataindex.value;
+    let index = draggableData.node.attributes.dataindex.value;
 
     //reference to the task being moved
     let reference = this.taskReferences[index].current;
