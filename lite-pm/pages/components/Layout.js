@@ -20,6 +20,15 @@ export default function Layout({ children, title }) {
           name="description"
           content="The eastiest way to manage your small project. LitePM allows you to create and schedule tasks on a Gantt chart, manage team members, and share documents."
         />
+        <meta property="og:title" content="LitePM" />
+        <meta property="og:site_name" content="LitePM" />
+        <meta property="og:url" content="https://litepm.com/" />
+        <meta
+          property="og:description"
+          content="The eastiest way to manage your small project. LitePM allows you to create and schedule tasks on a Gantt chart, manage team members, and share documents."
+        />
+        <meta property="og:type" content="product" />
+        <meta property="og:image" content="https://litepm.com/favicon.ico" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Navbar color="light" light expand="md">
