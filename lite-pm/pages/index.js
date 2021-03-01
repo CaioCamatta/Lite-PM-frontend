@@ -46,7 +46,7 @@ export default class HomePage extends Component {
       })
       .then(
         (res) => {
-          Router.push(`/projects/${res.data}`);
+          Router.push(`/project/${res.data}`);
         },
         (err) => {
           console.log(err);
@@ -143,10 +143,6 @@ export default class HomePage extends Component {
   render() {
     return (
       <div>
-        <Head>
-          <title>Create Next App</title>
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
         <Layout>
           <Container className="mb-5 px-4">
             <Row
@@ -163,9 +159,8 @@ export default class HomePage extends Component {
                 <h1>The eastiest way to manage your small project</h1>
                 <p className="mt-3 mb-4 text-110">
                   LitePM allows you to create and schedule tasks in an
-                  easy-to-use Gantt chart, manage team members, and easily
-                  create and share Google Docs with your team. All in a{" "}
-                  <b>single page</b>!
+                  easy-to-use Gantt chart, manage team members, and easily and
+                  share Documents with your team. All in a <b>single page</b>!
                 </p>
                 <Button
                   size="lg"
@@ -224,14 +219,14 @@ export default class HomePage extends Component {
               </Col>
             </Row>
             <Row className={"my-4 d-flex flex-row-reverse " + styles.smMY3}>
-              <Col sm={5} className={styles.smTextCenter + " my-auto"}>
+              <Col sm={4} className={styles.smTextCenter + " my-auto"}>
                 <h2>Schedule Tasks</h2>
                 <p>
                   Create your tasks and use our drag-and-drop Gantt chart to
                   assign tasks and visualize your project timeline.
                 </p>
               </Col>
-              <Col sm={{ size: 6, offset: 1 }} className="p-4">
+              <Col sm={{ size: 7, offset: 1 }} className="p-4">
                 <div className={styles.imageWithShadow + " rounded-xl"}>
                   <Image
                     src="/index2.png"
@@ -249,7 +244,10 @@ export default class HomePage extends Component {
                 className={styles.smTextCenter + " text-right my-auto"}
               >
                 <h2>Keep track of documents</h2>
-                <p>Easily create and keep track of all your Google Docs</p>
+                <p>
+                  Easily create and keep track of all your Google or Office
+                  Documents
+                </p>
               </Col>
               <Col sm={7} className="p-4">
                 <div className={styles.imageWithShadow + " rounded-xl"}>
