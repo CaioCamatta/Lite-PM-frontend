@@ -39,35 +39,9 @@ export default class Task extends Component {
           style={{ left: this.props.left, width: this.props.width }}
           dataindex={this.props.taskID}
         >
-          <Button
-            className={`w-100 px-0 ${styles.box}`}
-            onClick={this.toggleDisplayTask}
-            disabled={true}
-          >
+          <Button className={`w-100 px-0 ${styles.box}`} disabled={true}>
             <div className={styles.contents}>{this.props.name}</div>
           </Button>
-          <Modal
-            isOpen={this.state.displayTask}
-            toggle={this.toggleDisplayTask}
-          >
-            <ModalHeader>{this.props.name}</ModalHeader>
-            <ModalBody className="text-center">
-              {this.props.description}
-              <div className="d-flex">
-                Duration: {this.props.duration}
-                {this.props.durationType === 0 ? (
-                  <div className="ml-1">Hours</div>
-                ) : (
-                  <div>Days</div>
-                )}
-              </div>
-            </ModalBody>
-            <ModalFooter>
-              <Button color="success" onClick={this.toggleDisplayTask}>
-                Ok
-              </Button>
-            </ModalFooter>
-          </Modal>
         </div>
       </Draggable>
     );
