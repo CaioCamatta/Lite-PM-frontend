@@ -11,6 +11,9 @@ import styles from "../../styles/Timeline.module.css";
 import MemberTimeline from "./MemberTimeline";
 import Task from "./Task";
 import * as _ from "underscore";
+import Todo from './Todo'
+import Completed from './Completed'
+import Garbage from './Garbage'
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -37,6 +40,9 @@ export default class Timeline extends Component {
       scrollX: 0,
       offset: 0,
     };
+    this.todoRef = React.createRef();
+    this.completedRef = React.createRef();
+    this.garbageRef = React.createRef();
   }
 
   roundToNearestHour(timestamp) {
@@ -123,13 +129,24 @@ export default class Timeline extends Component {
     const [timeTicks, leftTimestamp, rightTimestamp] = this.calculateTimeTicks(
       this.state.offset
     );
+    try {
+      this.props.updateParentTimelineData(
+        this.state.offset,
+        timeTicks,
+        leftTimestamp,
+        rightTimestamp
+      );
+      this.props.addTimelineReference("todoTimeline", this.todoRef);
+      this.props.addTimelineReference("completedTimeline", this.completedRef);
+      this.props.addTimelineReference("garbage", this.garbageRef);
+    } catch (error) {
+      console.log(error);
+    }
     const currentRelativeTime =
       ((Date.now() - leftTimestamp) * 100) / (rightTimestamp - leftTimestamp);
-
     return (
       <div className="overflow-hidden">
-        <div className={styles.todoContainer} ref={this.todoRef}>
-          {this.props?.todoTasks?.map((task, index) => {
+        <Todo ref={this.todoRef} addTaskModal={this.props.addTaskModal} tasks={this.props?.todoTasks?.map((task, index) => {
             let taskRef = React.createRef();
             this.props.addTaskReference(task.taskId, taskRef);
 
@@ -138,6 +155,7 @@ export default class Timeline extends Component {
                 taskID={task.taskId}
                 handleStop={this.props.handleStop}
                 key={index}
+                status={task.status}
                 name={task.title}
                 description={task.description}
                 duration={task.description}
@@ -146,18 +164,7 @@ export default class Timeline extends Component {
                 assignee={task.userId}
               ></Task>
             );
-          })}
-          <Button
-            key={uuid()}
-            color="secondary"
-            className={`${styles.addTask} btn-brand1`}
-            onClick={this.props.addTaskModal}
-            assignee={-1}
-          >
-            <FontAwesomeIcon icon={faPlus} className="mr-2 align-middle" width={18}/>
-            Add Task
-          </Button>
-        </div>
+          })}></Todo>
 
         <div
           ref={this.ref}
@@ -195,28 +202,34 @@ export default class Timeline extends Component {
                 timeTicks={timeTicks}
                 leftTimestamp={leftTimestamp}
                 rightTimestamp={rightTimestamp}
-                tasks={member.taskList?.map((task) => {
-                  let taskRef = React.createRef();
-                  this.props.addTaskReference(task.taskId, taskRef);
-                  return (
-                    <Task
-                      taskID={task.taskId}
-                      handleStop={this.props.handleStop}
-                      key={task.key}
-                      name={task.title}
-                      description={task.description}
-                      duration={task.duration}
-                      durationType={task.durationType}
-                      startDate={task.startDate}
-                      ref={taskRef}
-                      assignee={task.userId}
-                    ></Task>
-                  );
-                })}
+                addTaskReference={this.props.addTaskReference}
+                handleStop={this.props.handleStop}
+                tasks={member.taskList}
               ></MemberTimeline>
             );
           })}
         </div>
+        <div className={styles.completedHeader}>Completed</div>
+        <Completed ref={this.completedRef} tasks={this.props?.completedTasks?.map((task, index) => {
+            let taskRef = React.createRef();
+            this.props.addTaskReference(task.taskId, taskRef);
+
+            return (
+              <Task
+                taskID={task.taskId}
+                handleStop={this.props.handleStop}
+                key={index}
+                name={task.title}
+                status={task.status}
+                description={task.description}
+                duration={task.description}
+                durationType={task.durationType}
+                ref={taskRef}
+                assignee={task.userId}
+              ></Task>
+            );
+          })}></Completed>
+          <Garbage ref={this.garbageRef}></Garbage>
       </div>
     );
   }

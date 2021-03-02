@@ -37,12 +37,12 @@ export default class Task extends Component {
           ref={this.childRef}
           className={this.props.className}
           style={{ left: this.props.left, width: this.props.width }}
+          dataindex={this.props.taskID}
         >
           <Button
-            className={`w-100 ${styles.box}`}
+            className={`w-100 px-0 ${styles.box}`}
             onClick={this.toggleDisplayTask}
             disabled={true}
-            dataindex={this.props.taskID}
           >
             <div className={styles.contents}>{this.props.name}</div>
           </Button>
