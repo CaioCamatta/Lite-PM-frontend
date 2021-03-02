@@ -44,13 +44,14 @@ export default class Timeline extends Component {
     return Math.round(timestamp / (3600 * 1000)) * 3600 * 1000;
   }
 
-  roundToNearestDate(timestamp) {
+  getDateAtMidnight(timestamp) {
     // Round milliseconds timestamp to nearest date at midnight
-    return Math.round(timestamp / (60 * 60 * 24 * 1000)) * 60 * 60 * 24 * 1000;
+    return new Date(new Date(timestamp).toDateString()).getTime();
   }
 
   calculateTimeTicks = (offset) => {
     let timeTicks = [];
+    let timeTicksTimestamps = [];
     let rightTimestamp, leftTimestamp;
 
     if (this.state.timelineScope == "hour") {
@@ -68,6 +69,7 @@ export default class Timeline extends Component {
       var currTime = leftTimestamp;
 
       while (currTime < rightTimestamp) {
+        timeTicksTimestamps.push(new Date(currTime).getTime());
         timeTicks.push(new Date(currTime).getHours());
         currTime += THREE_HOURS;
       }
@@ -75,10 +77,10 @@ export default class Timeline extends Component {
       // When timelineScope is set to Hours, timeline will span two weeks
       const WEEK = 1000 * 60 * 60 * 24 * 7;
 
-      leftTimestamp = this.roundToNearestDate(
+      leftTimestamp = this.getDateAtMidnight(
         Math.round(Date.now() - WEEK) + offset
       ); // Round to nearest hour
-      rightTimestamp = this.roundToNearestDate(
+      rightTimestamp = this.getDateAtMidnight(
         Math.round(Date.now() + WEEK) + offset
       ); // Round to nearest hour
       const ONE_DAY = 1000 * 60 * 60 * 24;
@@ -87,11 +89,12 @@ export default class Timeline extends Component {
 
       while (currTime < rightTimestamp) {
         timeTicks.push(new Date(currTime).getDate());
+        timeTicksTimestamps.push(new Date(currTime).getTime());
         currTime += ONE_DAY;
       }
     }
 
-    return [timeTicks, leftTimestamp, rightTimestamp];
+    return [timeTicks, leftTimestamp, rightTimestamp, timeTicksTimestamps];
   };
 
   onMouseDown = (e) => {
@@ -119,10 +122,17 @@ export default class Timeline extends Component {
     }
   };
 
+  changeTimelineScope = (scope) => {
+    this.setState({ timelineScope: scope });
+  };
+
   render() {
-    const [timeTicks, leftTimestamp, rightTimestamp] = this.calculateTimeTicks(
-      this.state.offset
-    );
+    const [
+      timeTicks,
+      leftTimestamp,
+      rightTimestamp,
+      timeTicksTimestamps,
+    ] = this.calculateTimeTicks(this.state.offset);
     const currentRelativeTime =
       ((Date.now() - leftTimestamp) * 100) / (rightTimestamp - leftTimestamp);
 
@@ -154,10 +164,31 @@ export default class Timeline extends Component {
             onClick={this.props.addTaskModal}
             assignee={-1}
           >
-            <FontAwesomeIcon icon={faPlus} className="mr-2 align-middle" width={18}/>
+            <FontAwesomeIcon
+              icon={faPlus}
+              className="mr-2 align-middle"
+              width={18}
+            />
             Add Task
           </Button>
         </div>
+
+        <ButtonGroup className="ml-auto mb-3 mr-1 float-right">
+          <Button
+            color="secondary"
+            onClick={() => this.changeTimelineScope("hour")}
+            active={this.state.timelineScope === "hour"}
+          >
+            Hours
+          </Button>
+          <Button
+            color="secondary"
+            onClick={() => this.changeTimelineScope("day")}
+            active={this.state.timelineScope === "day"}
+          >
+            Days
+          </Button>
+        </ButtonGroup>
 
         <div
           ref={this.ref}
@@ -166,8 +197,8 @@ export default class Timeline extends Component {
           onMouseMove={this.onMouseMove}
           data-heigth="100px"
           left="12%"
-          style={{ cursor: "grabbing" }}
-          className={`w-100 pr-2 d-flex justify-content-between position-relative text-muted small mb-2 ${styles.timeTicks}`}
+          style={{ cursor: "grabbing", height: "18px" }}
+          className={`w-100 pr-0 d-flex justify-content-between position-relative text-muted small mb-2 ${styles.timeTicks}`}
         >
           <span
             className="d-inline-block position-absolute"
@@ -178,8 +209,24 @@ export default class Timeline extends Component {
               left: `${currentRelativeTime}%`,
             }}
           ></span>
-          {timeTicks.map((tick, index) => {
-            return <span key={index}>{tick}</span>;
+          {timeTicksTimestamps.map((tick, index) => {
+            const relativePosition =
+              ((tick - leftTimestamp) * 100) / (rightTimestamp - leftTimestamp);
+            return (
+              <span
+                className="d-inline-block position-absolute"
+                style={{
+                  height: 19 + 5 + 50.7 * this.props.project?.Member.length,
+                  width: 1,
+                  background: "#00000066",
+                  left: `${relativePosition}%`,
+                  zIndex: "-2",
+                }}
+                key={index}
+              >
+                <span className="p-1">{timeTicks[index]}</span>
+              </span>
+            );
           })}
         </div>
         <div>
