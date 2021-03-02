@@ -1,7 +1,6 @@
 .addTask {
     border-width: 2px;
     border-style: solid;
-    border-color: #c0b9b9;
     border-radius: 15pt;
     background-color: #625d5d;
     width: 120pt;
@@ -11,6 +10,7 @@
     margin-left: 5pt;
     margin-bottom: 2.5pt;
     height: 28pt;
+    padding-top: 4px;
     text-align: center;
     
 }

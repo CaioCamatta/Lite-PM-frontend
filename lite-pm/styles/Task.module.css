@@ -13,9 +13,9 @@
   
   .contents {
     font-size: 10pt;
-    font-weight: 300;
+    font-weight: 500;
     max-width: 260px;
     overflow: hidden;
     white-space: nowrap;
-    color:black;
+    color:white;
   }

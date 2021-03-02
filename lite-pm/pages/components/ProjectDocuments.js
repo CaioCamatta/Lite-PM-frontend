@@ -45,7 +45,11 @@ export function ProjectDoc(props) {
             props.deleteDocument(props.documentId);
         }}
       >
-        <FontAwesomeIcon icon={faTrash} className="small text-muted" width={18}/>
+        <FontAwesomeIcon
+          icon={faTrash}
+          className="small text-muted"
+          width={18}
+        />
       </Button>
     </div>
   );
@@ -106,6 +110,8 @@ export default class ProjectDocuments extends Component {
   toggleCreateDocumentModal = () => {
     this.setState({
       showCreateDocumentModal: !this.state.showCreateDocumentModal,
+      url: null,
+      title: null,
     });
   };
 
@@ -137,7 +143,11 @@ export default class ProjectDocuments extends Component {
           <Button color="secondary" onClick={this.toggleCreateDocumentModal}>
             Cancel
           </Button>
-          <Button color="success" onClick={this.createDocument}>
+          <Button
+            color="success"
+            onClick={this.createDocument}
+            disabled={!this.state.title || !this.state.url}
+          >
             Create Document
           </Button>
         </ModalFooter>

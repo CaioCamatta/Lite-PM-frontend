@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import styles from "../../styles/Task.module.css";
+import ReactTooltip from "react-tooltip";
 
 import Draggable from "react-draggable";
 
@@ -39,35 +40,31 @@ export default class Task extends Component {
           style={{ left: this.props.left, width: this.props.width }}
           dataindex={this.props.taskID}
         >
-          <Button
-            className={`w-100 px-0 ${styles.box}`}
-            onClick={this.toggleDisplayTask}
-            disabled={true}
-          >
-            <div className={styles.contents}>{this.props.name}</div>
+          <Button className={`w-100 mb-0 px-0 ${styles.box}`} disabled={true}>
+            <div
+              data-tip
+              data-for={this.props.taskID}
+              className={styles.contents}
+            >
+              {this.props.name}
+            </div>
           </Button>
-          <Modal
-            isOpen={this.state.displayTask}
-            toggle={this.toggleDisplayTask}
+          <ReactTooltip
+            id={this.props.taskID}
+            key={this.props.taskID}
+            multiline
           >
-            <ModalHeader>{this.props.name}</ModalHeader>
-            <ModalBody className="text-center">
-              {this.props.description}
-              <div className="d-flex">
-                Duration: {this.props.duration}
-                {this.props.durationType === 0 ? (
-                  <div className="ml-1">Hours</div>
-                ) : (
-                  <div>Days</div>
-                )}
-              </div>
-            </ModalBody>
-            <ModalFooter>
-              <Button color="success" onClick={this.toggleDisplayTask}>
-                Ok
-              </Button>
-            </ModalFooter>
-          </Modal>
+            <b>{this.props.name}</b>
+            <br />
+            {this.props.description}
+            <br />
+            <i>
+              {this.props.timelineScope === "day"
+                ? Math.round((this.props.duration * 10) / 60 / 60 / 24) / 10
+                : Math.round((this.props.duration * 10) / 60 / 60) / 10}{" "}
+              {this.props.timelineScope + "s"}
+            </i>
+          </ReactTooltip>
         </div>
       </Draggable>
     );

@@ -16,7 +16,7 @@ export default class Todo extends Component {
 
   render() {
     return (
-      <div className={styles.todoContainer} ref={this.childRef}>
+      <div className={`p-1 px-2 ${styles.todoContainer}`} ref={this.childRef}>
         {this.props.tasks}
         <Button
           key={uuid()}
@@ -25,7 +25,7 @@ export default class Todo extends Component {
           onClick={this.props.addTaskModal}
           assignee={-1}
         >
-          <FontAwesomeIcon icon={faPlus} className="mr-2" width={18} />
+          <FontAwesomeIcon icon={faPlus} className="mr-2" width={16} />
           Add Task
         </Button>
       </div>

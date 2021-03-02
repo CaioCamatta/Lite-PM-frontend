@@ -1,11 +1,10 @@
 .timeline{
-    border-radius: 30pt;
+    border-radius: 3pt;
     border-width: 2pt;
     border-color: grey;
     background-color: white;
     border-style: solid;
     width: 100%;
-    margin-left: 3pt;
 }
 
 .timelineContainer {
@@ -18,5 +17,8 @@
 .name {
     font-size: 17pt;
     max-width: 90pt;
+    padding-right: 5px;
     min-width: 90pt;
+    background-color: white;
+    z-index: 15;
 }

@@ -40,7 +40,7 @@ class AppPage extends Component {
         Member: [],
       },
       showAddMember: false,
-      memberName: "Name",
+      memberName: "",
       memberEmail: "Email",
       memberGit: "Github Link",
       memberPhone: "Phone Number",
@@ -280,10 +280,10 @@ class AppPage extends Component {
       });
 
     this.setState({
-      memberName: "Name",
-      memberEmail: "Email",
-      memberGit: "Github Link",
-      memberPhone: "Phone Number",
+      memberName: "",
+      memberEmail: "",
+      memberGit: "",
+      memberPhone: "",
     });
   }
 
@@ -293,7 +293,9 @@ class AppPage extends Component {
         isOpen={this.state.showAddMember}
         toggle={this.toggleAddMemberModal}
       >
-        <ModalHeader className="modal-header border-0">Add a Team Member</ModalHeader>
+        <ModalHeader className="modal-header border-0">
+          Add a Team Member
+        </ModalHeader>
         <ModalBody className="text-left">
           <label>
             Name
@@ -341,9 +343,13 @@ class AppPage extends Component {
         </ModalBody>
         <ModalFooter className="modal-footer border-0">
           <Button color="outline secondary" onClick={this.toggleAddMemberModal}>
-            cancel
+            Cancel
           </Button>
-          <Button color="secondary" onClick={this.addTeamMember}>
+          <Button
+            color="secondary"
+            onClick={this.addTeamMember}
+            disabled={!this.state.memberName}
+          >
             Add Member
           </Button>
         </ModalFooter>
@@ -682,7 +688,7 @@ class AppPage extends Component {
     return (
       <Layout title={this.state?.project?.projectName}>
         <div style={{ minHeight: "90vh", marginBottom: 70 }}>
-          <Container className="mt-5 mb-5">
+          <Container className="mt-5 mb-5 overflow-hidden">
             <ProjectDetails
               projname={this.state.project.projectName}
               description={this.state.project.Description}
