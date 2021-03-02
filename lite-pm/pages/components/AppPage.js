@@ -688,7 +688,7 @@ class AppPage extends Component {
     return (
       <Layout title={this.state?.project?.projectName}>
         <div style={{ minHeight: "90vh", marginBottom: 70 }}>
-          <Container className="mt-5 mb-5">
+          <Container className="mt-5 mb-5 overflow-hidden">
             <ProjectDetails
               projname={this.state.project.projectName}
               description={this.state.project.Description}
