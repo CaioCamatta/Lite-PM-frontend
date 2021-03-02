@@ -31,7 +31,7 @@ export default class MemberTimeline extends Component {
                   key={index}
                   description={task.description}
                   duration={task.duration}
-                  durationType={this.props.taskDurationType}
+                  timelineScope={this.props.timelineScope}
                   className="position-absolute mt-0"
                   ref={taskRef}
                   assignee={task.userId}

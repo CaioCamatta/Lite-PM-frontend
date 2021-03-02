@@ -181,7 +181,7 @@ export default class Timeline extends Component {
     const currentRelativeTime =
       ((Date.now() - leftTimestamp) * 100) / (rightTimestamp - leftTimestamp);
     return (
-      <div className="overflow-hidden">
+      <div className="">
         <Todo ref={this.todoRef} addTaskModal={this.props.addTaskModal} tasks={this.props?.todoTasks?.map((task, index) => {
             let taskRef = React.createRef();
             this.props.addTaskReference(task.taskId, taskRef);
@@ -194,8 +194,8 @@ export default class Timeline extends Component {
                 status={task.status}
                 name={task.title}
                 description={task.description}
-                duration={task.description}
-                durationType={task.durationType}
+                duration={task.duration}
+                timelineScope={this.state.timelineScope}
                 ref={taskRef}
                 assignee={task.userId}
               ></Task>
@@ -292,6 +292,7 @@ export default class Timeline extends Component {
                 memberID={member.userId}
                 name={member.name}
                 ref={timelineRef}
+                timelineScope={this.state.timelineScope}
                 timeTicks={timeTicks}
                 leftTimestamp={leftTimestamp}
                 rightTimestamp={rightTimestamp}
@@ -310,12 +311,13 @@ export default class Timeline extends Component {
             return (
               <Task
                 taskID={task.taskId}
+                timelineScope={this.state.timelineScope}
                 handleStop={this.props.handleStop}
                 key={index}
                 name={task.title}
                 status={task.status}
                 description={task.description}
-                duration={task.description}
+                duration={task.duration}
                 durationType={task.durationType}
                 ref={taskRef}
                 assignee={task.userId}
