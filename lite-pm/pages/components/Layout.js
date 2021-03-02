@@ -31,7 +31,7 @@ export default function Layout({ children, title }) {
         <meta property="og:image" content="https://litepm.com/favicon.ico" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Navbar color="light" light expand="md">
+      <Navbar className="text-white" expand="md" style={{backgroundColor: "#6BA4C7"}}>
         <Container>
           <link rel="preconnect" href="https://fonts.gstatic.com" />
           <link
