@@ -13,7 +13,11 @@ import Task from "./Task";
 import * as _ from "underscore";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPlus,
+  faAngleLeft,
+  faAngleRight,
+} from "@fortawesome/free-solid-svg-icons";
 import uuid from "react-uuid";
 import axios from "axios";
 const baseUrl = `https://litepm.redirectme.net`;
@@ -36,6 +40,7 @@ export default class Timeline extends Component {
       clientX: 0,
       scrollX: 0,
       offset: 0,
+      manualOffset: 0,
     };
   }
 
@@ -126,13 +131,35 @@ export default class Timeline extends Component {
     this.setState({ timelineScope: scope });
   };
 
+  moveTimelineLeft = () => {
+    const delta =
+      this.state.timelineScope == "day"
+        ? 1000 * 60 * 60 * 24
+        : 1000 * 60 * 60 * 6;
+    // Reminder to eventually move these numbers into constants
+    this.setState((prevState) => ({
+      manualOffset: prevState.manualOffset + delta,
+    }));
+  };
+
+  moveTimelineRight = () => {
+    const delta =
+      this.state.timelineScope == "day"
+        ? 1000 * 60 * 60 * 24
+        : 1000 * 60 * 60 * 6;
+    // Reminder to eventually move these numbers into constants
+    this.setState((prevState) => ({
+      manualOffset: prevState.manualOffset - delta,
+    }));
+  };
+
   render() {
     const [
       timeTicks,
       leftTimestamp,
       rightTimestamp,
       timeTicksTimestamps,
-    ] = this.calculateTimeTicks(this.state.offset);
+    ] = this.calculateTimeTicks(this.state.offset + this.state.manualOffset);
     const currentRelativeTime =
       ((Date.now() - leftTimestamp) * 100) / (rightTimestamp - leftTimestamp);
 
@@ -187,6 +214,30 @@ export default class Timeline extends Component {
             active={this.state.timelineScope === "day"}
           >
             Days
+          </Button>
+        </ButtonGroup>
+        <ButtonGroup className="float-right mr-4">
+          <Button
+            color="link"
+            className="text-muted p-0 px-2"
+            onClick={this.moveTimelineLeft}
+          >
+            <FontAwesomeIcon
+              icon={faAngleLeft}
+              className="align-middle"
+              width={17}
+            />
+          </Button>
+          <Button
+            color="link"
+            className="text-muted p-0 px-2"
+            onClick={this.moveTimelineRight}
+          >
+            <FontAwesomeIcon
+              icon={faAngleRight}
+              className="align-middle"
+              width={17}
+            />
           </Button>
         </ButtonGroup>
 
