@@ -17,13 +17,11 @@ export default class TeamMember extends Component {
       <div className={`${styles.box} p-1 pr-2 shadow-sm`}>
         <div className={styles.title}>{this.state.displayName}</div>
         <div className={styles.contents}>
-          {/* This is API should not be populating displayPhone with "Phone Number when people dont enter a phone number" */}
           {this.state.displayEmail === "Email"
             ? "‏‏‎ ‎"
             : this.state.displayEmail}
         </div>
         <div className={styles.contents}>
-          {/* This is API should not be populating displayPhone with "Phone Number when people dont enter a phone number" */}
           {this.state.displayGit === "Github Link"
             ? "‏‏‎ ‎"
             : this.state.displayGit}
