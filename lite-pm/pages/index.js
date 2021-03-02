@@ -156,7 +156,7 @@ export default class HomePage extends Component {
                 offset={1}
                 className="my-auto"
               >
-                <h1>The eastiest way to manage your small project</h1>
+                <h1>The easiest way to manage your small project</h1>
                 <p className="mt-3 mb-4 text-110">
                   LitePM allows you to create and schedule tasks in an
                   easy-to-use Gantt chart, manage team members, and easily and
