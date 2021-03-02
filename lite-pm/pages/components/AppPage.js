@@ -40,7 +40,7 @@ class AppPage extends Component {
         Member: [],
       },
       showAddMember: false,
-      memberName: "Name",
+      memberName: "",
       memberEmail: "Email",
       memberGit: "Github Link",
       memberPhone: "Phone Number",
@@ -277,10 +277,10 @@ class AppPage extends Component {
       });
 
     this.setState({
-      memberName: "Name",
-      memberEmail: "Email",
-      memberGit: "Github Link",
-      memberPhone: "Phone Number",
+      memberName: "",
+      memberEmail: "",
+      memberGit: "",
+      memberPhone: "",
     });
   }
 
@@ -290,7 +290,9 @@ class AppPage extends Component {
         isOpen={this.state.showAddMember}
         toggle={this.toggleAddMemberModal}
       >
-        <ModalHeader className="modal-header border-0">Add a Team Member</ModalHeader>
+        <ModalHeader className="modal-header border-0">
+          Add a Team Member
+        </ModalHeader>
         <ModalBody className="text-left">
           <label>
             Name
@@ -338,9 +340,13 @@ class AppPage extends Component {
         </ModalBody>
         <ModalFooter className="modal-footer border-0">
           <Button color="outline secondary" onClick={this.toggleAddMemberModal}>
-            cancel
+            Cancel
           </Button>
-          <Button color="secondary" onClick={this.addTeamMember}>
+          <Button
+            color="secondary"
+            onClick={this.addTeamMember}
+            disabled={!this.state.memberName}
+          >
             Add Member
           </Button>
         </ModalFooter>
