@@ -27,7 +27,7 @@ export default class HomePage extends Component {
     super(props);
     this.state = {
       showAddProject: false,
-      projectName: "Name",
+      projectName: "",
       projectDescription: "Description",
       projectDuration: 0,
     };
@@ -72,7 +72,7 @@ export default class HomePage extends Component {
     this.toggleAddProjectModal();
     this.createProject();
     this.setState({
-      projectName: "Project Name",
+      projectName: "",
       projectDescription: "Description",
       projectDuration: "Duration",
     });
@@ -133,7 +133,7 @@ export default class HomePage extends Component {
           >
             Cancel
           </Button>
-          <Button color="secondary" onClick={this.addProject}>
+          <Button color="secondary" onClick={this.addProject} disabled={!this.state.projectName}>
             Create Project
           </Button>
         </ModalFooter>
