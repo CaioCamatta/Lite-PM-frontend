@@ -129,12 +129,21 @@ export default class Timeline extends Component {
     const [timeTicks, leftTimestamp, rightTimestamp] = this.calculateTimeTicks(
       this.state.offset
     );
-    this.props.updateParentTimelineData(this.state.offset, timeTicks, leftTimestamp, rightTimestamp)
+    try {
+      this.props.updateParentTimelineData(
+        this.state.offset,
+        timeTicks,
+        leftTimestamp,
+        rightTimestamp
+      );
+      this.props.addTimelineReference("todoTimeline", this.todoRef);
+      this.props.addTimelineReference("completedTimeline", this.completedRef);
+      this.props.addTimelineReference("garbage", this.garbageRef);
+    } catch (error) {
+      console.log(error);
+    }
     const currentRelativeTime =
       ((Date.now() - leftTimestamp) * 100) / (rightTimestamp - leftTimestamp);
-    this.props.addTimelineReference("todoTimeline", this.todoRef)
-    this.props.addTimelineReference("completedTimeline", this.completedRef)
-    this.props.addTimelineReference("garbage", this.garbageRef)
     return (
       <div className="overflow-hidden">
         <Todo ref={this.todoRef} addTaskModal={this.props.addTaskModal} tasks={this.props?.todoTasks?.map((task, index) => {
