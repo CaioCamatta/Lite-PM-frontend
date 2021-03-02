@@ -4,7 +4,7 @@ import styles from "../../styles/Garbage.module.css";
 import Task from "./Task";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 import uuid from "react-uuid";
 
@@ -17,7 +17,7 @@ export default class Garbage extends Component {
   render() {
     return (
       <div className={styles.container} ref={this.childRef}>   
-          <FontAwesomeIcon width={18} icon={faPlus} className="mr-2" />   
+          <FontAwesomeIcon width={18} icon={faTrash} className="mr-2 text-muted"/>   
       </div>
     );
   }
