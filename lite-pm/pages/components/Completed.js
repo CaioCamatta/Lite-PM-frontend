@@ -16,7 +16,7 @@ export default class Completed extends Component {
 
   render() {
     return (
-      <div className={styles.todoContainer} ref={this.childRef}>
+      <div className={`p-1 px-2 ${styles.todoContainer}`}  ref={this.childRef}>
         {this.props.tasks}
       </div>
     );

@@ -40,7 +40,7 @@ export default class Task extends Component {
           style={{ left: this.props.left, width: this.props.width }}
           dataindex={this.props.taskID}
         >
-          <Button className={`w-100 px-0 ${styles.box}`} disabled={true}>
+          <Button className={`w-100 mb-0 px-0 ${styles.box}`} disabled={true}>
             <div
               data-tip
               data-for={this.props.taskID}
