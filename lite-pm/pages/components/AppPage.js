@@ -62,7 +62,7 @@ class AppPage extends Component {
 
   componentDidMount() {
     let project = window.location.href.toString();
-    let testcase = project.split("/projects/");
+    let testcase = project.split("/project/");
     this.setState(
       {
         projectId: testcase[1],
@@ -439,7 +439,7 @@ class AppPage extends Component {
       getProjectDetails: this.getProjectDetails,
     };
     return (
-      <Layout>
+      <Layout title={this.state?.project?.projectName}>
         <div style={{ minHeight: "90vh", marginBottom: 70 }}>
           <Container className="mt-5 mb-5">
             <ProjectDetails
