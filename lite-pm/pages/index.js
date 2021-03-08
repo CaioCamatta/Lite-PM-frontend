@@ -88,7 +88,7 @@ export default class HomePage extends Component {
           Create a new project!
         </ModalHeader>
         <ModalBody className="text-left fontweight">
-          <label className="fontweight">
+          <label className="fontweight w-100">
             Project Name
             <br />
             <input
@@ -100,13 +100,14 @@ export default class HomePage extends Component {
             />
           </label>
           <br />
-          <label className="fontweight">
+          <label className="fontweight w-100">
             Project Description
             <br />
-            <input
+            <textarea
               className={styles.inputs}
               name="projectDescription"
-              type="text"
+              type="textarea"
+              rows="4"
               placeholder="Enter Project Description"
               onChange={this.handleChange}
             />
@@ -133,7 +134,11 @@ export default class HomePage extends Component {
           >
             Cancel
           </Button>
-          <Button color="secondary" onClick={this.addProject} disabled={!this.state.projectName}>
+          <Button
+            color="secondary"
+            onClick={this.addProject}
+            disabled={!this.state.projectName}
+          >
             Create Project
           </Button>
         </ModalFooter>
@@ -181,7 +186,7 @@ export default class HomePage extends Component {
                   icon={faUsers}
                   color="#444444"
                   className={styles.heroImage + " mx-auto"}
-                  size="5xl"
+                  size="5x"
                 />
               </Col>
             </Row>
