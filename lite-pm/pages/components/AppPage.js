@@ -108,13 +108,11 @@ class AppPage extends Component {
         }
       }
 
-      this.setState(
-        {
-          Member: members,
-          todoTasks: todos,
-          completedTasks: completed,
-        }
-      );
+      this.setState({
+        Member: members,
+        todoTasks: todos,
+        completedTasks: completed,
+      });
     });
   };
 
@@ -251,7 +249,13 @@ class AppPage extends Component {
   };
 
   toggleAddMemberModal() {
-    this.setState({ showAddMember: !this.state.showAddMember });
+    this.setState({
+      showAddMember: !this.state.showAddMember,
+      memberName: "",
+      memberEmail: "",
+      memberGit: "",
+      memberPhone: "",
+    });
   }
 
   handleChange(event) {
@@ -372,7 +376,7 @@ class AppPage extends Component {
 
     //reference to the task being moved
     let reference = this.taskReferences[index].current;
-  
+
     //arrays of keys to the timelines
     let timelineKeys = Object.keys(this.timelineReferences);
 
@@ -480,7 +484,7 @@ class AppPage extends Component {
               ); //editTask(taskId, title, duration, durationType, description, userId, status)
             });
             //console.log("complete to todo");
-            
+
             //change status of the task to complete and set userId to null
           } else {
             let tasks = this.state.project.Task;
@@ -538,7 +542,7 @@ class AppPage extends Component {
             tasks[location].userId = "";
             this.setState({ Task: tasks }, () => {
               this.refreshTasks();
-              console.log(reference.props.durationType)
+              console.log(reference.props.durationType);
               this.editTask(
                 reference.props.taskID,
                 reference.props.name,
@@ -623,7 +627,7 @@ class AppPage extends Component {
         timeline.current.childRef.current.getBoundingClientRect().x;
       offset = relativePosition / size;
     }
-    
+
     let newLeftStamp =
       (this.rightTimestamp - this.leftTimestamp) * offset + this.leftTimestamp;
     let duration = this.state.project.Task[location].duration;
@@ -688,7 +692,7 @@ class AppPage extends Component {
     return (
       <Layout title={this.state?.project?.projectName}>
         <div style={{ minHeight: "90vh", marginBottom: 70 }}>
-          <Container className="mt-5 mb-5 overflow-hidden">
+          <Container className="mt-5 mb-4 overflow-hidden">
             <ProjectDetails
               projname={this.state.project.projectName}
               description={this.state.project.Description}
@@ -696,19 +700,31 @@ class AppPage extends Component {
               projectLink={this.state.project.projectId}
               {...commonProps}
             />
-            <h2 className={`${styles.h2} mb-4`}>The Team</h2>
+            <h2 className={`${styles.h2} mb-1`}>The Team</h2>
             <div className="d-flex mb-3">
-              {this.state.project.Member.map((member, index) => {
-                return (
-                  <TeamMember
-                    key={index}
-                    name={member.name}
-                    email={member.email}
-                    git={member.github}
-                    phone={member.phone}
-                  ></TeamMember>
-                );
-              })}
+              {!this.state.project.Member.length && (
+                <p className="small text-muted mb-0 mt-2">
+                  <FontAwesomeIcon
+                    icon={faInfoCircle}
+                    width={18}
+                    className="mr-2"
+                  />
+                  Start by adding a team member.
+                </p>
+              )}
+              <div className="d-flex mt-3">
+                {this.state.project.Member.map((member, index) => {
+                  return (
+                    <TeamMember
+                      key={index}
+                      name={member.name}
+                      email={member.email}
+                      git={member.github}
+                      phone={member.phone}
+                    ></TeamMember>
+                  );
+                })}
+              </div>
             </div>
             <Button
               color="secondary mt-2"
