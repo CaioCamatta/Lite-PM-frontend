@@ -181,7 +181,7 @@ export default class HomePage extends Component {
                   icon={faUsers}
                   color="#444444"
                   className={styles.heroImage + " mx-auto"}
-                  size={200}
+                  size="5xl"
                 />
               </Col>
             </Row>
