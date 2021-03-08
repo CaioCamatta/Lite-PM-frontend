@@ -17,6 +17,8 @@
 .name {
     font-size: 17pt;
     max-width: 90pt;
+    white-space: pre;
+    overflow: hidden;
     padding-right: 5px;
     min-width: 90pt;
     background-color: white;

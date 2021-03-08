@@ -303,7 +303,7 @@ export default class Timeline extends Component {
             );
           })}
         </div>
-        <div className={styles.completedHeader}>Completed</div>
+        <div className={`${styles.completedHeader} mt-4`}>Completed</div>
         <Completed ref={this.completedRef} tasks={this.props?.completedTasks?.map((task, index) => {
             let taskRef = React.createRef();
             this.props.addTaskReference(task.taskId, taskRef);
