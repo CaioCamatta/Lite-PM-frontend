@@ -15,7 +15,6 @@ import Layout from "./Layout";
 import ProjectDetails from "./ProjectDetails";
 import TeamMember from "./TeamMember";
 import Timeline from "./Timeline";
-import MemberTimeline from "./MemberTimeline";
 import ProjectDocuments from "./ProjectDocuments";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -351,7 +350,7 @@ class AppPage extends Component {
           <Button
             color="secondary"
             onClick={this.addTeamMember}
-            disabled={!this.state.memberName}
+            disabled={!this.state.memberName || !this.state.memberEmail}
           >
             Add Member
           </Button>
@@ -636,12 +635,9 @@ class AppPage extends Component {
       draggableStartX <=
       timeline.current.childRef.current.getBoundingClientRect().x
     ) {
-      console.log("here1")
       offset = 0.5;
     } 
     else {
-      console.log("here3")
-
       let size = timeline.current.childRef.current.getBoundingClientRect()
         .width;
       relativePosition =
@@ -669,9 +665,6 @@ class AppPage extends Component {
     rightTimestamp,
     timelineScope
   ) => {
-    console.log(leftTimestamp)
-    console.log(offset)
-
     this.offset = offset;
     this.leftTimestamp = leftTimestamp;
     this.rightTimestamp = rightTimestamp;

@@ -1,10 +1,6 @@
 import React, { Component } from "react";
 import {
   Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   ButtonGroup,
 } from "reactstrap";
 import styles from "../../styles/Timeline.module.css";
@@ -17,12 +13,10 @@ import Garbage from './Garbage'
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faPlus,
   faAngleLeft,
   faAngleRight,
 } from "@fortawesome/free-solid-svg-icons";
-import uuid from "react-uuid";
-import axios from "axios";
+
 const baseUrl = `https://litepm.redirectme.net`;
 
 export default class Timeline extends Component {

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import { Button } from "reactstrap";
 import styles from "../../styles/Task.module.css";
 import ReactTooltip from "react-tooltip";
 
