@@ -170,7 +170,8 @@ export default class Timeline extends Component {
         this.state.offset,
         timeTicks,
         leftTimestamp,
-        rightTimestamp
+        rightTimestamp,
+        this.state.timelineScope
       );
       this.props.addTimelineReference("todoTimeline", this.todoRef);
       this.props.addTimelineReference("completedTimeline", this.completedRef);
