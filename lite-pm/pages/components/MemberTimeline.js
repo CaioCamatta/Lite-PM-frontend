@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import styles from "../../styles/MemberTimeline.module.css";
 import Task from "./Task";
 

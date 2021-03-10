@@ -1,10 +1,6 @@
 import React, { Component } from "react";
 import {
   Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   ButtonGroup,
 } from "reactstrap";
 import styles from "../../styles/Timeline.module.css";
@@ -17,12 +13,10 @@ import Garbage from './Garbage'
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faPlus,
   faAngleLeft,
   faAngleRight,
 } from "@fortawesome/free-solid-svg-icons";
-import uuid from "react-uuid";
-import axios from "axios";
+
 const baseUrl = `https://litepm.redirectme.net`;
 
 export default class Timeline extends Component {
@@ -170,7 +164,8 @@ export default class Timeline extends Component {
         this.state.offset,
         timeTicks,
         leftTimestamp,
-        rightTimestamp
+        rightTimestamp,
+        this.state.timelineScope
       );
       this.props.addTimelineReference("todoTimeline", this.todoRef);
       this.props.addTimelineReference("completedTimeline", this.completedRef);

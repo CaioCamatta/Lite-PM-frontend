@@ -1,9 +1,11 @@
 import React, { Component } from "react";
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import { Button } from "reactstrap";
 import styles from "../../styles/Task.module.css";
 import ReactTooltip from "react-tooltip";
 
 import Draggable from "react-draggable";
+
+let colors = ["#529CCA", "#9A6DD7", "#FFA344", "#4DAB9A", "#FF7369"]
 
 export default class Task extends Component {
   //create nice boxes, all must be same size - on click open up display modal for task showing all details
@@ -20,7 +22,8 @@ export default class Task extends Component {
       displayTask: false,
       durationType: this.props.durationType,
     };
-
+    let color = this.props.taskID?.charCodeAt(this.props.taskID.length-1) % colors.length
+    this.color = colors[color]
     this.childRef = React.createRef();
   }
 
@@ -40,7 +43,7 @@ export default class Task extends Component {
           style={{ left: this.props.left, width: this.props.width }}
           dataindex={this.props.taskID}
         >
-          <Button className={`w-100 mb-0 px-0 ${styles.box}`} disabled={true}>
+          <Button className={`w-100 mb-0 px-0 ${styles.box}`} disabled={true} style={{backgroundColor: this.color}}>
             <div
               data-tip
               data-for={this.props.taskID}

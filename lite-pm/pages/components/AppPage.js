@@ -15,7 +15,6 @@ import Layout from "./Layout";
 import ProjectDetails from "./ProjectDetails";
 import TeamMember from "./TeamMember";
 import Timeline from "./Timeline";
-import MemberTimeline from "./MemberTimeline";
 import ProjectDocuments from "./ProjectDocuments";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -53,8 +52,6 @@ class AppPage extends Component {
 
       todoTasks: [],
       completedTasks: [],
-
-      timelineScope: "hours",
     };
 
     this.addTeamMember = this.addTeamMember.bind(this);
@@ -66,6 +63,7 @@ class AppPage extends Component {
     this.leftTimestamp = 0;
     this.rightTimestamp = 0;
     this.timeTicks = 0;
+    this.timelineScope = "hour"
   }
 
   componentDidMount() {
@@ -352,7 +350,7 @@ class AppPage extends Component {
           <Button
             color="secondary"
             onClick={this.addTeamMember}
-            disabled={!this.state.memberName}
+            disabled={!this.state.memberName || !this.state.memberEmail}
           >
             Add Member
           </Button>
@@ -380,6 +378,7 @@ class AppPage extends Component {
     //arrays of keys to the timelines
     let timelineKeys = Object.keys(this.timelineReferences);
 
+    let spotFound = false
     for (let i = 0; i < timelineKeys.length; i++) {
       let timelineY =
         this.timelineReferences[
@@ -390,16 +389,36 @@ class AppPage extends Component {
         ].current.childRef.current.getBoundingClientRect().height /
           2;
 
-      if (Math.abs(draggableY - timelineY) < 30) {
+      if (Math.abs(draggableY - timelineY) < 25) {
         let location = this.findTask(reference);
         if (timelineKeys[i] === "garbage") {
           //delete the task
-          let tasks = this.state.project.Task;
-          tasks.splice(location, 1);
-          this.setState({ Task: tasks }, () => {
+          //check whether the x coordinate is close enough to the garbage can to delete
+          if (
+            Math.abs(
+              (this.timelineReferences[
+                timelineKeys[i]
+              ].current.childRef.current.getBoundingClientRect().x + 
+              this.timelineReferences[
+                timelineKeys[i]
+              ].current.childRef.current.getBoundingClientRect().width /
+                2) -
+                (reference.childRef.current.getBoundingClientRect().x + reference.childRef.current.getBoundingClientRect().width/2) >=
+                30
+            )
+          ) {
             this.refreshTasks();
-            this.deleteTask(reference.props.taskID);
-          });
+          }
+          //otherwise just snap back to wherever it was
+          else {
+            let tasks = this.state.project.Task;
+            tasks.splice(location, 1);
+            this.setState({ Task: tasks }, () => {
+              this.refreshTasks();
+              this.deleteTask(reference.props.taskID);
+            });
+          }
+
           //console.log("garbage");
         }
         //if the task was already there, do nothing (snap back into place)
@@ -532,7 +551,7 @@ class AppPage extends Component {
             );
             //console.log(this.state.project.Task);
           });
-          console.log("member to self");
+          //console.log("member to self");
         }
         //moving from a timeline to anywhere else
         else {
@@ -542,7 +561,6 @@ class AppPage extends Component {
             tasks[location].userId = "";
             this.setState({ Task: tasks }, () => {
               this.refreshTasks();
-              console.log(reference.props.durationType);
               this.editTask(
                 reference.props.taskID,
                 reference.props.name,
@@ -590,7 +608,12 @@ class AppPage extends Component {
             //find the task and set its new userId
           }
         }
+        spotFound = true
+        break; 
       }
+    }
+    if(!spotFound){
+      this.refreshTasks()
     }
   };
 
@@ -612,14 +635,9 @@ class AppPage extends Component {
       draggableStartX <=
       timeline.current.childRef.current.getBoundingClientRect().x
     ) {
-      offset = 0;
-    } else if (
-      draggableEndX >=
-      timeline.current.childRef.current.getBoundingClientRect().x +
-        timeline.current.childRef.current.getBoundingClientRect().width
-    ) {
-      offset = 1;
-    } else {
+      offset = 0.5;
+    } 
+    else {
       let size = timeline.current.childRef.current.getBoundingClientRect()
         .width;
       relativePosition =
@@ -644,12 +662,14 @@ class AppPage extends Component {
     offset,
     timeTicks,
     leftTimestamp,
-    rightTimestamp
+    rightTimestamp,
+    timelineScope
   ) => {
     this.offset = offset;
     this.leftTimestamp = leftTimestamp;
     this.rightTimestamp = rightTimestamp;
     this.timeTicks = timeTicks;
+    this.timelineScope = timelineScope
   };
 
   findTask = (reference) => {
