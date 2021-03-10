@@ -412,7 +412,9 @@ class AppPage extends Component {
           //otherwise just snap back to wherever it was
           else {
             let tasks = this.state.project.Task;
+            console.log(tasks)
             tasks.splice(location, 1);
+            console.log(tasks)
             this.setState({ Task: tasks }, () => {
               this.refreshTasks();
               this.deleteTask(reference.props.taskID);

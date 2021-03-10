@@ -22,7 +22,8 @@ export default class Task extends Component {
       displayTask: false,
       durationType: this.props.durationType,
     };
-    this.color = ""
+    let color = this.props.taskID?.charCodeAt(this.props.taskID.length-1) % colors.length
+    this.color = colors[color]
     this.childRef = React.createRef();
   }
 
@@ -30,13 +31,7 @@ export default class Task extends Component {
     this.setState({ displayTask: !this.state.displayTask });
   };
 
-  pickColour = () => {
-    let color = this.props.taskID.charCodeAt(this.props.taskID.length-1) % colors.length
-    this.color = colors[color]
-  }
-
   render() {
-    this.pickColour()
     return (
       <Draggable
         defaultPosition={{ x: 0, y: 0 }}
