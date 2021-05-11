@@ -17,7 +17,7 @@ import {
   faAngleRight,
 } from "@fortawesome/free-solid-svg-icons";
 
-const baseUrl = `https://litepm.redirectme.net`;
+const baseUrl = `https://api.litepm.com`;
 
 export default class Timeline extends Component {
   //create nice boxes, all must be same size - on click open up display modal for task showing all details
