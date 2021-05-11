@@ -20,7 +20,7 @@ import React, { Component } from "react";
 import Router from "next/router";
 import axios from "axios";
 
-const baseUrl = "https://litepm.redirectme.net";
+const baseUrl = "https://api.litepm.com";
 
 export default class HomePage extends Component {
   constructor(props) {
